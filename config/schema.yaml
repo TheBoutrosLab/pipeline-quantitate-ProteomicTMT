@@ -1,74 +1,67 @@
----
-dataset_id:
-  type: 'String'
-  required: true
-  help: 'Dataset identifier'
-patient_id:
-  type: 'String'
-  required: true
-  help: 'Patient identifier'
-sample_id:
-  type: 'String'
-  required: true
-  help: 'Sample identifier'
-param_name:
-  type: 'String'
-  required: false
-  default: 'foo-bar'
-  help: 'Example pipeline parameter; replace with pipeline-specific parameters'
 output_dir:
-  type: 'Path'
-  mode: 'w'
+  type: Path
+  mode: w
   required: true
-  help: 'Absolute path to output directory'
-apptainer_library:
-  type: 'Path'
-  mode: 'r'
+  help: Root output directory.
+plex_name:
+  type: String
+  required: true
+  help: Name of the TMT plex used in consensusXML headers and output paths.
+idXML:
+  type: Path
+  mode: r
+  required: true
+  help: Combined peptide identifications in idXML format.
+input_csv:
+  type: Path
+  mode: r
   required: false
-  help: 'Absolute path to Apptainer library directory'
-apptainer_cache:
-  type: 'Path'
-  mode: 'w'
+  help: CSV containing mzML paths for one TMT plex.
+merged_consensusXML:
+  type: Path
+  mode: r
   required: false
-  help: 'Absolute path to Apptainer cache directory'
-singularity_library:
-  type: 'Path'
-  mode: 'r'
+  help: Existing merged consensusXML used instead of mzML extraction.
+channel_description:
+  type: Path
+  mode: r
   required: false
-  help: 'Absolute path to Singularity library directory'
-singularity_cache:
-  type: 'Path'
-  mode: 'w'
+  help: Reporter channel descriptions for mzML extraction.
+protein_quantifier_best_charge_and_fraction:
+  type: Bool
   required: false
-  help: 'Absolute path to Singularity cache directory'
+  help: Report peptide abundance separately by fraction and charge state.
+tmt_normalization_method:
+  type: String
+  required: false
+  help: Normalization method, either mad or openms.
+mad_normalizer_quasi_intensity:
+  type: Bool
+  required: false
+  help: Write MAD-normalized reference-scaled quasi-intensities instead of log2 ratios.
+filter_na_consensus_handles:
+  type: Bool
+  required: false
+  help: Remove NaN reporter handles after MAD normalization.
+resource_allocation_profile_tag:
+  type: String
+  required: false
+  help: Resource profile in resources.json.
 base_resource_update:
-  type: 'ResourceUpdateNamespace'
+  type: ResourceUpdateNamespace
   required: false
-  help: 'User-defined modifications for adjusting base resource allocations for processes'
+  help: Per-process resource adjustments.
   elements:
     memory:
-      type: 'ResourceUpdateList'
+      type: ResourceUpdateList
       required: false
-      help: 'List of memory updates'
+      help: Memory adjustments.
     cpus:
-      type: 'ResourceUpdateList'
+      type: ResourceUpdateList
       required: false
-      help: 'List of CPU updates'
-input:
-  type: 'InputNamespace'
-  required: true
-  help: 'Input samples'
-  elements:
-    BAM:
-      type: 'InputBAMNamespace'
-      required: true
-      help: 'Input BAM samples grouped by sample type'
-      elements:
-        normal:
-          type: 'BAMEntryList'
-          required: false
-          help: 'Input normal sample'
-        tumor:
-          type: 'BAMEntryList'
-          required: false
-          help: 'Input tumor sample'
+      help: CPU adjustments.
+work_dir:
+  type: Path
+  mode: w
+  required: false
+  help: Optional Nextflow working directory.

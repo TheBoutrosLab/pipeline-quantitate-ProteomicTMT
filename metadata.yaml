@@ -1,0 +1,11 @@
+---
+Category: "pipeline"
+Description: "Nextflow pipeline to quantitate isobaric labeled proteomic data"
+Maintainers: "Chenghao Zhu"
+Contributors: ["Brandon Tsai", "Lydia Y. Liu"]
+Languages: ["Nextflow", "Python"]
+Dependencies: ["Java", "Nextflow", "Docker or Apptainer", "OpenMS", "MSPTools"]
+References: ""
+Tools: ["OpenMS", "MSPTools"]
+Engineering_Owner: []
+Scientific_Owner: []

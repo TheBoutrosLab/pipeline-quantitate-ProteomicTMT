@@ -1,162 +1,27 @@
-# Pipeline Name
+# quantitate-ProteomicTMT
 
-[![Prepare release](https://img.shields.io/badge/Action-Create%20New%20Release-blue)](https://github.com/theboutroslab/template-NextflowPipeline/actions/workflows/prepare-release.yaml)
+Quantifies peptides from one isobaric labeled plex using OpenMS and MSPTools. The pipeline accepts a CSV of mzML fractions plus an idXML, or a premerged consensusXML plus an idXML. All mzML rows must belong to the same plex. Reporter channels are samples within that plex; the pipeline does not use LFQ sample or fraction grouping.
 
-- [Pipeline Name](#pipeline-name)
-  - [Overview](#overview)
-  - [How To Run](#how-to-run)
-  - [Flow Diagram](#flow-diagram)
-  - [Pipeline Steps](#pipeline-steps)
-    - [1. Step/Process 1](#1-stepprocess-1)
-    - [2. Step/Process 2](#2-stepprocess-2)
-    - [3. Step/Process n](#3-stepprocess-n)
-  - [Inputs](#inputs)
-  - [Outputs](#outputs)
-  - [Testing and Validation](#testing-and-validation)
-    - [Test Data Set](#test-data-set)
-    - [Validation <version number\>](#validation-version-number)
-    - [Validation Tool](#validation-tool)
-  - [References](#references)
-  - [Discussions](#discussions)
-  - [Contributors](#contributors)
-  - [License](#license)
-## Overview
+## Run
 
-A 3-4 sentence summary of the pipeline, including the pipeline's purpose, the type of expected scientific inputs/outputs of the pipeline (e.g: FASTQs and BAMs), and a list of tools/steps in the pipeline.
+Copy [config/template.config](config/template.config), fill in absolute paths, and run `nextflow run . -c your.config -profile docker`. Use `-profile apptainer` or `-profile singularity` on a cluster. For mzML input, use the one-column [input/input.csv](input/input.csv) template and a channel CSV with `channel,description` columns. Omit `input_csv` and set `merged_consensusXML` to begin after extraction and merging. Set exactly one entry point.
 
----
+The default OpenMS and pyOpenMS images use version 3.5.0; MSPTools uses the `dev` image. Set `resource_allocation_profile_tag` to a key in `config/resources.json`; process allocations use the shared resource handler. Use `base_resource_update` for overrides. `save_intermediate_files` copies process intermediates into the output tree.
 
-## How To Run
+## Workflow
 
-1. Update the params section of the .config file
+mzML input: `FileFilter -sort` → `IsobaricAnalyzer` → `FileMerger -append_method append_rows`. The premerged entry point starts at the supplied consensusXML. With `enable_tmt_normalization = true` (default), `tmt_normalization_method = 'mad'` runs MSPtools MAD normalization before `IDMapper`; optional NaN-handle removal is disabled by default. Choose `'openms'` to enable median-ratio normalization in IsobaricAnalyzer and skip MSPtools normalization; this choice requires mzML input. Set `enable_tmt_normalization = false` to skip normalization. For mzML input, consensusXML column filenames are set to `plex_name` after merging. Before `IDMapper`, the pipeline writes a temporary idXML copy with run names matching the consensusXML column filename. It checks that merged source files do not reuse native scan IDs; files with overlapping scan IDs must be mapped separately before merging. `IDConflictResolver` and `ProteinQuantifier` follow. `protein_quantifier_best_charge_and_fraction` defaults to `true`, reporting peptide abundances separately by fraction and charge state; set it to `false` to omit that flag and let OpenMS aggregate charge states. MSPtools reads the plex-specific abundance column headers written by OpenMS 3.5 and converts all-zero plex values to missing values. With `protein_quantifier_best_charge_and_fraction = true`, it also uses the consensusXML to mark unquantified reporter channels as missing; with `false`, the charge-aggregated peptide CSV cannot support that channel-level lookup. `remove_mapped_consensus = true` also writes a consensusXML of unmapped features.
 
-2. Update the input yaml
-
-3. See the submission script, [here](https://github.com/theboutroslab/tool-submit-nf), to submit your pipeline
-
----
-
-## Flow Diagram
-
-A directed acyclic graph of your pipeline. The [PlantUML](https://plantuml.com/) code defining this diagram is version-controlled in the [docs/](./docs/) folder, and a [GitHub Action](https://github.com/theboutroslab/tool-PlantUML-action) automatically regenerates the SVG image when that file is changed.
-
-![Pipeline Graph](./docs/pipeline-flow.svg)
-
----
-
-## Pipeline Steps
-
-### 1. Step/Process 1
-
-> A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
-
-### 2. Step/Process 2
-
-> A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
-
-### 3. Step/Process n
-
-> A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
-
----
-
-## Inputs
-
-### Input YAML
-
-> include an example of the organization structure within the YAML. Example:
-```yaml
-input 1: 'patient_id'
-input:
-    normal:
-      - id: <normal id>
-        BAM: </path/to/normal.bam>
-    tumor:
-      - id: <tumor id>
-        BAM: </path/to/tumor.bam>
-```
-
-### Config
-
-| Field | Type | Required | Description |
-| ----- | ---- | ------------ | ------------------------ |
-| param 1 | _type_ | yes/no | 1-2 sentence description of the parameter, including any defaults if any. |
-| param 2 | _type_ | yes/no | 1-2 sentence description of the parameter, including any defaults if any. |
-| param n | _type_ | yes/no | 1-2 sentence description of the parameter, including any defaults if any. |
-| `work_dir` | path | no | Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With ucla_cds, the default is `/scratch` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
-
-> Include the optional param `work_dir` in the inputs accompanied by a warning of the potentials dangers of using the param. Update the warning if necessary.
-
----
+Important parameters: `plex_name`, `tmt_normalization_method`, `enable_tmt_normalization`, `mad_normalizer_quasi_intensity`, `filter_na_consensus_handles`, `isobaric_analyzer_type` (for example `tmt10plex`), `reference_channel`, `correction_matrix`, `channel_description`, `virtual_reference`, `virtual_reference_method`, `protein_quantifier_best_charge_and_fraction`, and `remove_mapped_consensus`. The correction matrix is passed directly to OpenMS as a space-separated set of reporter rows. See [docs/params.rst](docs/params.rst) for the command parameter list. Channel CSV labels must match the chosen plex type. `channel_description` applies only to mzML extraction; a premerged consensusXML must already contain channel descriptions in its column headers. For MAD normalization, `mad_normalizer_quasi_intensity = true` (default) writes reference-scaled quasi-intensities rather than normalized log2 ratios; set it to `false` for the ratio output. `filter_na_consensus_handles = false` retains missing reporter handles as NaN, preserving channel positions in the D’Angelo integration test. MSPtools release 1.0.1 predates these MAD fixes; select an image containing `--quasi-intensity` when using MAD normalization.
 
 ## Outputs
 
-<!-- List and describe the final output(s) of the pipeline. -->
+Results are written under `<output_dir>/quantitate-ProteomicTMT-<version>/<plex_name>/OpenMS-<version>/output`. The directory contains the merged `FileMerger.consensusXML` when extraction runs, the mapped `IDMapper.consensusXML`, the resolved `IDConflictResolver.consensusXML`, the final peptide CSV (`*_ProteinQuantifier_peptide.csv` without normalization or `*_fixZeroPlex.csv` with normalization), and optionally `*_unmapped.consensusXML`. Logs, trace, timeline, report, and parameter JSON are written in a timestamped sibling `log-*` directory.
 
-| Output | Description |
-| ------------ | ------------------------ |
-| ouput 1 | 1 - 2 sentence description of the output. |
-| ouput 2 | 1 - 2 sentence description of the output. |
-| ouput n | 1 - 2 sentence description of the output. |
+## Tests
 
----
-
-## Testing and Validation
-
-### Test Data Set
-
-A 2-3 sentence description of the test data set(s) used to validate and test this pipeline. If possible, include references and links for how to access and use the test dataset
-
-### Validation <version number\>
-
-| Input/Output | Description | Result |
-| ------------ | ------------------------ | ------------------------ |
-| metric 1 | 1 - 2 sentence description of the metric | quantifiable result |
-| metric 2 | 1 - 2 sentence description of the metric | quantifiable result |
-| metric n | 1 - 2 sentence description of the metric | quantifiable result |
-
-- [Reference/External Link/Path 1 to any files/plots or other validation results](<link>)
-- [Reference/External Link/Path 2 to any files/plots or other validation results](<link>)
-- [Reference/External Link/Path n to any files/plots or other validation results](<link>)
-
-### Validation Tool
-
-Included is a template for validating your input files. For more information on the tool check out: https://github.com/theboutroslab/package-PipeVal
-
----
-
-## References
-
-1. [Reference 1](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-2. [Reference 2](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-3. [Reference n](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-
----
-
-## Discussions
-
-- [Issue tracker](<link-to-repo-issues-page>) to report errors and enhancement ideas.
-- Discussions can take place in [<pipeline> Discussions](<link-to-repo-discussions-page>)
-- [<pipeline> pull requests](<link-to-repo-pull-requests>) are also open for discussion
-
----
-
-## Contributors
-
-> Update link to repo-specific URL for GitHub Insights Contributors page.
-
-Please see list of [Contributors](https://github.com/theboutroslab/template-NextflowPipeline/graphs/contributors) at GitHub.
-
----
+See [test/README.md](test/README.md) for the four NFTest integration cases and external fixture environment variables. Integration runs require cluster fixture files and container access.
 
 ## License
 
-[pipeline name] is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
-
-<one line to give the program's name and a brief idea of what it does.>
-
-Copyright (C) 2026 Sanford Burnham Prebys Medical Discovery Institute ("Boutros Lab")
-
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+GNU GPL v2 or later; see [LICENSE](LICENSE).

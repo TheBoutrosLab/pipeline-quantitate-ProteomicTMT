@@ -1,12 +1,9 @@
-# Pipeline Test Files
+# NFTest fixtures
 
-The test files in this directory were generated synthetically from a tiny SAM file:
+From the repository root, copy `.env-template` to `.env` and set the fixture paths needed by the cases you run. The MAD physical-reference and VirtualReference cases use `DATA_DIR` for the D’Angelo subset; the other cases use the mzML or merged-consensusXML paths specified in their configs. Run `test/run-nftest.sh <case-name>` inside a Slurm job from the repository root. The wrapper sets `NFT_OUTPUT` and sources the repository-root `.env`. For local runs, export the same variables and run `nftest run -c nftest.yml <case-name>`.
 
-```
-@HD	VN:1.0	SO:unsorted
-@SQ	SN:chr1	LN:1000
-@RG	ID:sample1	SM:PatientY	LB:lib1	PL:ILLUMINA
-read1	0	chr1	100	60	10M	*	0	0	AAAAAAAAAA	FFFFFFFFFF
-```
+`test-integration-MAD-PhysicalReference` uses three mzML paths, a validated idXML, and the 10-channel description from the D’Angelo E. coli TMT subset. It uses reporter channel 126 as the physical reference, leaves the isotope-correction matrix at the OpenMS default, and selects MSPtools MAD normalization with the `dev` image containing the physical-reference fix. It retains NaN reporter handles and writes quasi-intensities, as the pipeline does by default. The cluster run passed with all 888 peptide CSV rows aligned to the 10 channel headers.
 
-FIXME: These files should be removed from any pipelines generated from this template.
+`test-integration-VirtualReference` uses the same mzML and idXML fixtures, but configures MAD normalization with a median virtual reference and treats all ten reporter channels as channels in that calculation. It leaves isotope correction at the OpenMS default, retains NaN handles, and writes quasi-intensities. Its cluster run passed with 888 peptide CSV rows aligned to the 10 channel headers. `csv_environment_expander.groovy` expands environment variables to absolute paths before Nextflow reads each CSV. Full integration requires the fixture files and configured containers on the cluster.
+
+`test-integration-mergedConsensusXML` starts from an existing consensusXML whose column headers already contain channel descriptions. It does not use `channel_description` or `input_csv`. This case also exercises the optional unmapped-feature output and passed on the cluster.
