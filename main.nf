@@ -1,121 +1,62 @@
-#!/usr/bin/env nextflow
+nextflow.enable.dsl = 2
 
-nextflow.enable.dsl=2
+include { printPrelogue } from "${projectDir}/modules/common"
 
-// Include processes and workflows here
-include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf'
+include { sort_spectra } from "${projectDir}/modules/sort_spectra"
+include { extract_isobaric } from "${projectDir}/modules/extract_isobaric"
+include { merge_consensusXML } from "${projectDir}/modules/merge_consensusXML"
+include { set_ConsensusXMLFilename } from "${projectDir}/modules/set_ConsensusXMLFilename"
+include { align_idXMLRunName } from "${projectDir}/modules/align_idXMLRunName"
+include { map_idXML2consensusXML } from "${projectDir}/modules/map_idXML2consensusXML"
+include { remove_ConsensusMappedFeatures } from "${projectDir}/modules/remove_ConsensusMappedFeatures"
+include { resolve_conflict } from "${projectDir}/modules/resolve_conflict"
+include { quantify_peptides } from "${projectDir}/modules/quantify_peptides"
+include { normalize_consensusXML_MAD } from "${projectDir}/modules/normalize_consensusXML_MAD"
+include { filter_consensusXML_naFeatures } from "${projectDir}/modules/filter_consensusXML_naFeatures"
+include { fix_ProteinQuantCSV_unquantified } from "${projectDir}/modules/fix_ProteinQuantCSV_unquantified"
 
-include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-include { indexFile } from './external/pipeline-Nextflow-module/modules/common/indexFile/main.nf'
+printPrelogue()
 
-// Add this pipeline's custom modules here
-include { run_command_Tool } from './module/EXAMPLE_checksum.nf'
-
-// include { tool_name_command_name } from './module/module-name'
-
-// Log info here
-log.info """\
-        ======================================
-        T E M P L A T E - N F  P I P E L I N E
-        ======================================
-        Boutros Lab
-
-        Current Configuration:
-        - pipeline:
-            name: ${workflow.manifest.name}
-            version: ${workflow.manifest.version}
-
-        - input:
-            input a: ${params.variable_name}
-            ...
-
-        - output:
-            output a: ${params.output_path}
-            ...
-
-        - options:
-            option a: ${params.option_name}
-            ...
-
-        Tools Used:
-            tool a: ${params.docker_image_name}
-
-        ------------------------------------
-        Starting workflow...
-        ------------------------------------
-        """
-        .stripIndent()
-
-// Establish input channels here
-Channel
-    .fromList(params.samples_to_process)
-    .map { sample ->
-        return tuple(sample.id, sample.path, sample.sample_type)
-    }
-    .set { samplesToProcessChannel }
-
-Channel
-    .fromList(params.samples_to_process)
-    .map{ it -> [it['path'], indexFile(it['path'])] }
-    .flatten()
-    .set { files_to_validate_ch }
-
-// These are a few potential channels that can be mixed in
-
-/*
-Channel
-    .from(
-        params.reference,
-        params.reference_index,
-        params.reference_dict
-        )
-    .set { reference_ch }
-
-// Decription of input channel
-Channel
-    .fromPath(params.variable_name)
-    .ifEmpty { error "Cannot find: ${params.variable_name}" }
-    .set { input_ch_variable_name }
-
-files_to_validate_ch = files_to_validate_ch
-    .mix(reference_ch)
-    .mix(input_ch_variable_name)
-*/
-
-// Main workflow here
 workflow {
+    if (params.containsKey('input_csv')) {
+        channel_description = Channel.fromPath(params.channel_description).splitCsv(header:true)
+            .map{ [[it.channel, it.description]] }
+            .collect()
 
+        mzML = Channel.fromPath(params.input_csv).splitCsv(header:true).map{[file(it.path)]}
+        sort_spectra(mzML)
+        extract_isobaric(sort_spectra.out[0], channel_description)
+        merge_consensusXML(extract_isobaric.out[0].collect())
+        set_ConsensusXMLFilename(merge_consensusXML.out[0], file("${projectDir}/src/ConsensusXMLFileRenamer.py"))
+        merged_consensusXML = set_ConsensusXMLFilename.out[0]
+    } else {
+        merged_consensusXML = file(params.merged_consensusXML)
+    }
 
-    base_meta = Channel.value([
-        'log_output_dir': params.log_output_dir,
-        'output_dir': params.output_dir_base
-    ])
+    if (params.enable_tmt_normalization && params.tmt_normalization_method == 'mad') {
+        normalize_consensusXML_MAD(merged_consensusXML)
+        // Keep NaN reporter handles by default: removing one makes ProteinQuantifier
+        // omit that channel's CSV field and shift later values under the wrong headers.
+        if (params.filter_na_consensus_handles) {
+            filter_consensusXML_naFeatures(normalize_consensusXML_MAD.out[0])
+            consensus_for_mapping = filter_consensusXML_naFeatures.out[0]
+        } else {
+            consensus_for_mapping = normalize_consensusXML_MAD.out[0]
+        }
+    } else {
+        consensus_for_mapping = merged_consensusXML
+    }
 
-    // Validate input files
-    run_validate_PipeVal(
-        base_meta.combine(files_to_validate_ch)
-        )
+    align_idXMLRunName(consensus_for_mapping, params.idXML, file("${projectDir}/src/AlignIdXMLRunName.py"))
+    map_idXML2consensusXML(consensus_for_mapping, align_idXMLRunName.out[0])
 
-    // Capture validation results
-    run_validate_PipeVal.out.validation_result
-        .collectFile(
-            name: 'input_validation.txt', newLine: true,
-            storeDir: "${params.output_dir_base}/validation"
-        )
+    if (params.remove_mapped_consensus) {
+        remove_ConsensusMappedFeatures(map_idXML2consensusXML.out[0], file("${projectDir}/src/ConsensusIDRemover.py"))
+    }
 
-    // Add pipeline-specific workflow steps here
-    run_command_Tool(
-        run_validate_PipeVal.out.validated_file
-        )
-
-    /*
-    tool_name_command_name(
-        samplesToProcessChannel,
-        input_ch_variable_name
-        )
-    */
-
-    workflow.onComplete = {
-        WorkflowFinalizer.completeWorkflow(workflow, params);
+    resolve_conflict(map_idXML2consensusXML.out[0])
+    quantify_peptides(resolve_conflict.out[0])
+    if (params.enable_tmt_normalization) {
+        fix_ProteinQuantCSV_unquantified(quantify_peptides.out[0], resolve_conflict.out[0])
     }
 }

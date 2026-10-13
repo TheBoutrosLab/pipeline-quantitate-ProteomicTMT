@@ -1,69 +1,18 @@
 # Changelog
-All notable changes to the pipeline-name pipeline.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## 1.0.0
 
-This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
----
-
-## [Unreleased]
-### Added
-- Add external `indexFile`
-- Add `sample_id` extraction from BAM
-- Add template input YAMLs
-- Add `pipeline-Nexflow-config` as submodule and redirect `set_resources_allocation`
-- Add `pipeline-Nextflow-module` as submodule
-- Additional out of memory exit code
-- Pipeline release action
-- Template for NFTest testing results in PR template
-- Enable dependabot
-- Add example PlantUML image to README
-- Add workflow to build documentation
-- Add workflows to run Nextflow configuration tests
-- Add `CODEOWNERS` set to `nextflow-wg`
-- Add standard workflows for documentation and tests
-- Add schema example with custom types
-### Changed
-- Switch resource limit checks to external scripts
-- Update links in on-prem `Confluence` to point to cloud-based `Confluence`
-- Fix `CODEOWNERS` file
-- Use `schema.check_path` for `workDir` validation
-- Add `Discussions` and `Contributors` to the Table of Contents in `README.md`
-- Update from DSL1 to DSL2
-- Standardize config structure
-- Restructure repo so main script is `main.nf`
-- Reorganize contributors and metadata
-- Reorganize PR template so description is at top
-- Update automatic node detection to allow for `F2` detection
-- Update `ISSUE_TEMPLATE`
-- Standardize input/output/parameter structure in `README.md`
-- Avoid modification of input parameter `output_dir`
-- Create default docker container registry parameter for tools
-- Use `methods.setup_process_afterscript()` to capture log files
-- Use metadata-as-input rather than `addParams`
-
----
-
-## [1.0.0] - YYYY-MM-DD
-### Added
-- For new features.
-- Added item 1.
-
-### Changed
-- For changes in existing functionality.
-- Changed item 1.
-
-### Deprecated
-- For soon-to-be removed features.
-
-### Removed
-- For now removed features.
-- Removed item 1.
-
-### Fixed
-- For any bug fixes.
-- Fixed item 1.
-
-### Security
-- In case of vulnerabilities.
+- Implemented the isobaric quantification workflow with mzML and premerged consensusXML entry points, optional MAD normalization, ID mapping, conflict resolution, and peptide quantification.
+- Added shared schema, resource allocation, container profiles, and NFTest fixture configuration.
+- Published the mapped consensusXML result and staged Python scripts for portable container execution.
+- Made `ProteinQuantifier -best_charge_and_fraction` configurable, enabled by default. The zero-plex cleanup omits its charge-specific consensusXML lookup when the flag is disabled.
+- Removed the obsolete CSV reheader step; OpenMS 3.5 supplies sample-specific abundance headers.
+- Omitted unset optional entry-point paths from defaults so shared schema validation accepts either workflow.
+- Aligned a temporary idXML copy to the merged TMT consensusXML filename for scan-based ID mapping, with a check for duplicate scan IDs across source runs.
+- Read OpenMS 3.5 abundance headers directly through MSPtools during zero-plex cleanup.
+- Added a MAD or OpenMS normalization choice and selected MAD with a physical reference channel for the D’Angelo integration test. MSPtools 1.0.2 supplies the required MAD fixes.
+- Made post-MAD NaN-handle removal configurable and disabled it by default. Retaining NaN handles preserves reporter-channel positions in ProteinQuantifier output.
+- Updated the virtual-reference integration case to use the D’Angelo fixtures and MAD median virtual-reference settings; it passed on the cluster with 888 aligned peptide rows.
+- Enabled MSPtools MADNormalizer quasi-intensity output by default, with a parameter to retain normalized log2 ratios when needed. Both MAD integration cases passed with 888 aligned peptide rows each.
+- Renamed the required TMT plex identifier from `sample_name` to `plex_name` across configuration, output naming, and integration fixtures.
+- Removed the unused channel CSV from the premerged-consensusXML test and fixed its entry-point configuration. Updated the unmapped-feature script for pyOpenMS 3.5's typed peptide-identification list.
