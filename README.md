@@ -1,27 +1,151 @@
-# quantitate-ProteomicTMT
+# pipeline-quantitate-ProteomicTMT
 
-Quantifies peptides from one isobaric labeled plex using OpenMS and MSPTools. The pipeline accepts a CSV of mzML fractions plus an idXML, or a premerged consensusXML plus an idXML. All mzML rows must belong to the same plex. Reporter channels are samples within that plex; the pipeline does not use LFQ sample or fraction grouping.
+[![Prepare release](https://img.shields.io/badge/Action-Create%20New%20Release-blue)](https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/actions/workflows/prepare-release.yaml)
 
-## Run
+- [pipeline-quantitate-ProteomicTMT](#pipeline-quantitate-proteomictmt)
+  - [Overview](#overview)
+  - [How To Run](#how-to-run)
+  - [Pipeline Steps](#pipeline-steps)
+  - [Inputs](#inputs)
+    - [Input CSV](#input-csv)
+    - [Channel CSV](#channel-csv)
+    - [Config](#config)
+  - [Outputs](#outputs)
+  - [References](#references)
+  - [License](#license)
 
-Copy [config/template.config](config/template.config), fill in absolute paths, and run `nextflow run . -c your.config -profile docker`. Use `-profile apptainer` or `-profile singularity` on a cluster. For mzML input, use the one-column [input/input.csv](input/input.csv) template and a channel CSV with `channel,description` columns. Omit `input_csv` and set `merged_consensusXML` to begin after extraction and merging. Set exactly one entry point.
+## Overview
 
-The default OpenMS and pyOpenMS images use version 3.5.0; MSPTools uses the `dev` image. Set `resource_allocation_profile_tag` to a key in `config/resources.json`; process allocations use the shared resource handler. Use `base_resource_update` for overrides. `save_intermediate_files` copies process intermediates into the output tree.
+This Nextflow DSL2 pipeline quantifies peptides from one isobaric-labeled TMT plex. It combines reporter-ion measurements with peptide identifications using OpenMS and MSPtools. One run accepts either an mzML CSV plus an idXML, or a premerged consensusXML plus an idXML. The reporter channels are samples within the plex; every mzML row in one run must belong to that plex.
 
-## Workflow
+---
 
-mzML input: `FileFilter -sort` → `IsobaricAnalyzer` → `FileMerger -append_method append_rows`. The premerged entry point starts at the supplied consensusXML. With `enable_tmt_normalization = true` (default), `tmt_normalization_method = 'mad'` runs MSPtools MAD normalization before `IDMapper`; optional NaN-handle removal is disabled by default. Choose `'openms'` to enable median-ratio normalization in IsobaricAnalyzer and skip MSPtools normalization; this choice requires mzML input. Set `enable_tmt_normalization = false` to skip normalization. For mzML input, consensusXML column filenames are set to `plex_name` after merging. Before `IDMapper`, the pipeline writes a temporary idXML copy with run names matching the consensusXML column filename. It checks that merged source files do not reuse native scan IDs; files with overlapping scan IDs must be mapped separately before merging. `IDConflictResolver` and `ProteinQuantifier` follow. `protein_quantifier_best_charge_and_fraction` defaults to `true`, reporting peptide abundances separately by fraction and charge state; set it to `false` to omit that flag and let OpenMS aggregate charge states. MSPtools reads the plex-specific abundance column headers written by OpenMS 3.5 and converts all-zero plex values to missing values. With `protein_quantifier_best_charge_and_fraction = true`, it also uses the consensusXML to mark unquantified reporter channels as missing; with `false`, the charge-aggregated peptide CSV cannot support that channel-level lookup. `remove_mapped_consensus = true` also writes a consensusXML of unmapped features.
+## How To Run
 
-Important parameters: `plex_name`, `tmt_normalization_method`, `enable_tmt_normalization`, `mad_normalizer_quasi_intensity`, `filter_na_consensus_handles`, `isobaric_analyzer_type` (for example `tmt10plex`), `reference_channel`, `correction_matrix`, `channel_description`, `virtual_reference`, `virtual_reference_method`, `protein_quantifier_best_charge_and_fraction`, and `remove_mapped_consensus`. The correction matrix is passed directly to OpenMS as a space-separated set of reporter rows. See [docs/params.rst](docs/params.rst) for the command parameter list. Channel CSV labels must match the chosen plex type. `channel_description` applies only to mzML extraction; a premerged consensusXML must already contain channel descriptions in its column headers. For MAD normalization, `mad_normalizer_quasi_intensity = true` (default) writes reference-scaled quasi-intensities rather than normalized log2 ratios; set it to `false` for the ratio output. `filter_na_consensus_handles = false` retains missing reporter handles as NaN, preserving channel positions in the D’Angelo integration test. MSPtools release 1.0.1 predates these MAD fixes; select an image containing `--quasi-intensity` when using MAD normalization.
+1. Create a `.config` using the [template](config/template.config). Set `output_dir`, `plex_name`, `idXML`, and exactly one of `input_csv` or `merged_consensusXML`. For mzML input, also set `channel_description` and review the plex type, reference channel, and normalization method.
+
+2. For mzML input, create an [input CSV](input/input.csv) listing the mzML files and a channel CSV with `channel,description` columns. A premerged consensusXML already contains channel descriptions in its column headers; it does not use either CSV.
+
+3. Initialize the Git submodules and run the pipeline with Nextflow, for example:
+
+   ```bash
+   export NXF_VER=24.10.6
+   export NXF_SYNTAX_PARSER=v1
+   nextflow run TheBoutrosLab/pipeline-quantitate-ProteomicTMT -r <version> -c config/my-run.config
+   ```
+
+   The configuration defaults to Docker. Use `-profile apptainer` or `-profile singularity` where appropriate; the `local` profile uses installed executables for development. The [`.env-template`](.env-template) records the Nextflow version used with the shared configuration modules.
+
+> :warning: A single run processes one plex. The merged input must retain its column headers and scan identifiers for ID mapping. Different source files with duplicate native scan IDs must be mapped separately before merging.
+
+---
+
+## Pipeline Steps
+
+For mzML input, `FileFilter` sorts each file, `IsobaricAnalyzer` extracts reporter ions, and `FileMerger` appends the consensus features. The pipeline sets the merged column filenames to `plex_name`. The premerged entry point starts with the supplied consensusXML.
+
+Normalization is enabled by default. The default `tmt_normalization_method = 'openms'` uses IsobaricAnalyzer's median-ratio normalization and requires mzML input. Set it to `mad` to use MSPtools MADNormalizer after merging. MAD normalization can use a physical reference identified by a column description of `reference`, or a virtual reference computed from reporter intensities. With `mad_normalizer_quasi_intensity = true` (default), MADNormalizer writes reference-scaled quasi-intensities; set it to `false` for normalized log2 ratios. NaN reporter handles are retained by default so missing channels keep their positions in the peptide CSV. Set `enable_tmt_normalization = false` to skip both normalization methods.
+
+Before `IDMapper`, the pipeline aligns a temporary idXML copy's run names to the consensusXML column filename. `IDConflictResolver` resolves mapped peptide assignments, and `ProteinQuantifier` writes peptide abundances. When normalization is enabled, MSPtools marks all-zero plexes as missing in the final CSV. It also checks unquantified reporter channels against the consensusXML when `protein_quantifier_best_charge_and_fraction = true`. Set `remove_mapped_consensus = true` to also publish unmapped features.
+
+---
+
+## Inputs
+
+### Input CSV
+
+For the mzML entry point, the CSV has one column and one mzML path per row. All rows belong to the same plex; multiple rows can represent fractions of that plex.
+
+| Field | Required | Description |
+| ----- | -------- | ----------- |
+| `path` | yes | Absolute path to an mzML file. |
+
+```csv
+path
+/data/plex_01_fraction_1.mzML
+/data/plex_01_fraction_2.mzML
+```
+
+Use [input/input.csv](input/input.csv) as a template. For the premerged entry point, set `merged_consensusXML` instead of `input_csv`.
+
+### Channel CSV
+
+The mzML entry point also requires a CSV of reporter-channel labels. The labels must match `isobaric_analyzer_type`. For physical-reference MAD normalization, mark the reference channel with the description `reference`.
+
+| Field | Required | Description |
+| ----- | -------- | ----------- |
+| `channel` | yes | Reporter label, such as `126` or `127N` for TMT10plex. |
+| `description` | yes | Channel identifier; use `reference` for a physical MAD reference. |
+
+```csv
+channel,description
+126,reference
+127N,sample_01
+127C,sample_02
+```
+
+A premerged consensusXML must already contain channel descriptions in its column headers. The `channel_description` parameter is ignored for that entry point.
+
+### Config
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| `input_csv` | string(path) | mzML CSV. Set this or `merged_consensusXML`, but not both. |
+| `merged_consensusXML` | string(path) | Existing merged consensusXML used instead of mzML extraction. |
+| `idXML` | string(path) | Peptide identifications matching the supplied spectra. |
+| `output_dir` | string(path) | Root output directory. |
+| `plex_name` | string | Name of the plex used in output paths and, for mzML input, consensusXML column filenames. |
+| `channel_description` | string(path) | Channel CSV required for mzML extraction. |
+| `isobaric_analyzer_type` | string | OpenMS reporter-plex type, such as `tmt10plex`. |
+| `reference_channel` | string | Reference-channel label passed to IsobaricAnalyzer for mzML input. |
+| `correction_matrix` | string | Optional isotope-correction rows passed to IsobaricAnalyzer. |
+| `enable_tmt_normalization` | bool | Enable the selected normalization method. Defaults to `true`. |
+| `tmt_normalization_method` | string | `openms` (default) or `mad`; OpenMS normalization requires mzML input. |
+| `virtual_reference` | bool | Have MADNormalizer derive a reference from each feature's reporter intensities. Defaults to `false`. |
+| `virtual_reference_method` | string | `median` or `mean` for a virtual MAD reference. MSPtools defaults to `median`. |
+| `mad_normalizer_quasi_intensity` | bool | Write reference-scaled quasi-intensities instead of log2 ratios for MAD. Defaults to `true`. |
+| `filter_na_consensus_handles` | bool | Remove NaN reporter handles after MAD normalization. Defaults to `false` to preserve CSV columns. |
+| `protein_quantifier_best_charge_and_fraction` | bool | Report peptide abundances by charge and fraction. Defaults to `true`. |
+| `remove_mapped_consensus` | bool | Also publish the consensusXML of unmapped features. Defaults to `false`. |
+| `save_intermediate_files` | bool | Publish intermediate files. Defaults to `false`. |
+| `resource_allocation_profile_tag` | string | Resource profile in `config/resources.json`. Defaults to `default`. |
+| `base_resource_update` | namespace | Optional per-process CPU and memory adjustments using the shared resource handler. |
+| `work_dir` | string(path) | Optional Nextflow work directory. |
+
+Additional OpenMS and MSPtools options and their pipeline parameter names are listed in [docs/params.rst](docs/params.rst). The default OpenMS and pyOpenMS images use 3.5.0. The default MSPtools image is 1.0.1; MAD quasi-intensity output requires an image containing `--quasi-intensity`, such as the `dev` image used by the integration tests.
+
+---
 
 ## Outputs
 
-Results are written under `<output_dir>/quantitate-ProteomicTMT-<version>/<plex_name>/OpenMS-<version>/output`. The directory contains the merged `FileMerger.consensusXML` when extraction runs, the mapped `IDMapper.consensusXML`, the resolved `IDConflictResolver.consensusXML`, the final peptide CSV (`*_ProteinQuantifier_peptide.csv` without normalization or `*_fixZeroPlex.csv` with normalization), and optionally `*_unmapped.consensusXML`. Logs, trace, timeline, report, and parameter JSON are written in a timestamped sibling `log-*` directory.
+Final results are saved under `<output_dir>/quantitate-ProteomicTMT-<version>/<plex_name>/OpenMS-<version>/output/`:
 
-## Tests
+| Output | Description |
+| ------ | ----------- |
+| `<plex_name>_FileMerger.consensusXML` | Merged reporter-ion features, for mzML input. |
+| `<plex_name>_IDMapper.consensusXML` | Consensus features with peptide identifications mapped to them. |
+| `<plex_name>_IDConflictResolver.consensusXML` | Consensus features after conflicting identifications are resolved. |
+| `<plex_name>_ProteinQuantifier_peptide_fixZeroPlex.csv` | Final peptide abundances when normalization is enabled. |
+| `<plex_name>_ProteinQuantifier_peptide.csv` | Final peptide abundances when normalization is disabled. |
+| `<plex_name>_unmapped.consensusXML` | Unmapped features, when `remove_mapped_consensus = true`. |
 
-See [test/README.md](test/README.md) for the four NFTest integration cases and external fixture environment variables. Integration runs require cluster fixture files and container access.
+Intermediate files are published under `intermediate/` when `save_intermediate_files = true`. Process logs and Nextflow reports are written under the timestamped `log-quantitate-ProteomicTMT-*` directory. Three NFTest integration cases are defined in [nftest.yml](nftest.yml); fixture setup is described in [test/README.md](test/README.md).
+
+---
+
+## References
+
+1. Pfeuffer et al. OpenMS 3 enables reproducible analysis of large-scale mass spectrometry data. *Nature Methods*, 21, 365–367 (2024). [doi:10.1038/s41592-024-02197-7](https://doi.org/10.1038/s41592-024-02197-7)
+2. [MSPtools](https://github.com/TheBoutrosLab/package-MSPtools), used for MAD normalization and peptide CSV cleanup.
+
+---
 
 ## License
 
-GNU GPL v2 or later; see [LICENSE](LICENSE).
+pipeline-quantitate-ProteomicTMT is licensed under the GNU General Public License version 2. See [LICENSE](LICENSE) for the terms of the GNU GPL license.
+
+Copyright (C) 2026 Sanford Burnham Prebys Medical Discovery Institute ("Boutros Lab")
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
