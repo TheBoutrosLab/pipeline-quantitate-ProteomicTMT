@@ -48,19 +48,9 @@
                 <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
-                </li>
-              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Pipeline Steps</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#1-stepprocess-1">1. Step/Process 1</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2-stepprocess-2">2. Step/Process 2</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-stepprocess-n">3. Step/Process n</a>
-    </li>
     </ul>
                 </li>
               </ul>
@@ -73,19 +63,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../discussions/">Discussions</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../contributors/">Contributors</a>
                 </li>
               </ul>
               <ul>
@@ -108,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Pipeline Steps</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/35a2629a953281110d25233a32824a0e2f809b5a/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -117,24 +95,15 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="pipeline-steps">Pipeline Steps</h2>
-<h3 id="1-stepprocess-1">1. Step/Process 1</h3>
-<blockquote>
-<p>A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.</p>
-</blockquote>
-<h3 id="2-stepprocess-2">2. Step/Process 2</h3>
-<blockquote>
-<p>A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.</p>
-</blockquote>
-<h3 id="3-stepprocess-n">3. Step/Process n</h3>
-<blockquote>
-<p>A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.</p>
-</blockquote>
+<p>For mzML input, <code>FileFilter</code> sorts each file, <code>IsobaricAnalyzer</code> extracts reporter ions, and <code>FileMerger</code> appends the consensus features. The pipeline sets the merged column filenames to <code>plex_name</code>. The premerged entry point starts with the supplied consensusXML.</p>
+<p>Normalization is enabled by default. The default <code>tmt_normalization_method = 'openms'</code> uses IsobaricAnalyzer's median-ratio normalization and requires mzML input. Set it to <code>mad</code> to use MSPtools MADNormalizer after merging. MAD normalization can use a physical reference identified by a column description of <code>reference</code>, or a virtual reference computed from reporter intensities. With <code>mad_normalizer_quasi_intensity = true</code> (default), MADNormalizer writes reference-scaled quasi-intensities; set it to <code>false</code> for normalized log2 ratios. NaN reporter handles are retained by default so missing channels keep their positions in the peptide CSV. Set <code>enable_tmt_normalization = false</code> to skip both normalization methods.</p>
+<p>Before <code>IDMapper</code>, the pipeline aligns a temporary idXML copy's run names to the consensusXML column filename. <code>IDConflictResolver</code> resolves mapped peptide assignments, and <code>ProteinQuantifier</code> writes peptide abundances. When normalization is enabled, MSPtools marks all-zero plexes as missing in the final CSV. It also checks unquantified reporter channels against the consensusXML when <code>protein_quantifier_best_charge_and_fraction = true</code>. Set <code>remove_mapped_consensus = true</code> to also publish unmapped features.</p>
 <hr />
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../flow-diagram/" class="btn btn-neutral float-left" title="Flow Diagram"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../how-to-run/" class="btn btn-neutral float-left" title="How To Run"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../inputs/" class="btn btn-neutral float-right" title="Inputs">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -162,7 +131,7 @@
         </span>
     
     
-      <span><a href="../flow-diagram/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../how-to-run/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../inputs/" style="color: #fcfcfc">Next &raquo;</a></span>

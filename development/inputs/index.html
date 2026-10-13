@@ -49,17 +49,15 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
                 </li>
               </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Inputs</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#input-yaml">Input YAML</a>
+    <li class="toctree-l2"><a class="reference internal" href="#input-csv">Input CSV</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#channel-csv">Channel CSV</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#config">Config</a>
     </li>
@@ -71,19 +69,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../discussions/">Discussions</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../contributors/">Contributors</a>
                 </li>
               </ul>
               <ul>
@@ -106,7 +92,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/35a2629a953281110d25233a32824a0e2f809b5a/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -115,59 +101,176 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="inputs">Inputs</h2>
-<h3 id="input-yaml">Input YAML</h3>
-<blockquote>
-<p>include an example of the organization structure within the YAML. Example:</p>
-</blockquote>
-<pre><code class="language-yaml">input 1: 'patient_id'
-input:
-    normal:
-      - id: &lt;normal id&gt;
-        BAM: &lt;/path/to/normal.bam&gt;
-    tumor:
-      - id: &lt;tumor id&gt;
-        BAM: &lt;/path/to/tumor.bam&gt;
-</code></pre>
-<h3 id="config">Config</h3>
+<h3 id="input-csv">Input CSV</h3>
+<p>For the mzML entry point, the CSV has one column and one mzML path per row. All rows belong to the same plex; multiple rows can represent fractions of that plex.</p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Type</th>
 <th>Required</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>param 1</td>
-<td><em>type</em></td>
-<td>yes/no</td>
-<td>1-2 sentence description of the parameter, including any defaults if any.</td>
-</tr>
-<tr>
-<td>param 2</td>
-<td><em>type</em></td>
-<td>yes/no</td>
-<td>1-2 sentence description of the parameter, including any defaults if any.</td>
-</tr>
-<tr>
-<td>param n</td>
-<td><em>type</em></td>
-<td>yes/no</td>
-<td>1-2 sentence description of the parameter, including any defaults if any.</td>
-</tr>
-<tr>
-<td><code>work_dir</code></td>
-<td>path</td>
-<td>no</td>
-<td>Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With ucla_cds, the default is <code>/scratch</code> and should only be changed for testing/development. Changing this directory to <code>/hot</code> or <code>/tmp</code> can lead to high server latency and potential disk space limitations, respectively.</td>
+<td><code>path</code></td>
+<td>yes</td>
+<td>Absolute path to an mzML file.</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>Include the optional param <code>work_dir</code> in the inputs accompanied by a warning of the potentials dangers of using the param. Update the warning if necessary.</p>
-</blockquote>
+<pre><code class="language-csv">path
+/data/plex_01_fraction_1.mzML
+/data/plex_01_fraction_2.mzML
+</code></pre>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/input/input.csv">input/input.csv</a> as a template. For the premerged entry point, set <code>merged_consensusXML</code> instead of <code>input_csv</code>.</p>
+<h3 id="channel-csv">Channel CSV</h3>
+<p>The mzML entry point also requires a CSV of reporter-channel labels. The labels must match <code>isobaric_analyzer_type</code>. For physical-reference MAD normalization, mark the reference channel with the description <code>reference</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>channel</code></td>
+<td>yes</td>
+<td>Reporter label, such as <code>126</code> or <code>127N</code> for TMT10plex.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>yes</td>
+<td>Channel identifier; use <code>reference</code> for a physical MAD reference.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-csv">channel,description
+126,reference
+127N,sample_01
+127C,sample_02
+</code></pre>
+<p>A premerged consensusXML must already contain channel descriptions in its column headers. The <code>channel_description</code> parameter is ignored for that entry point.</p>
+<h3 id="config">Config</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input_csv</code></td>
+<td>string(path)</td>
+<td>mzML CSV. Set this or <code>merged_consensusXML</code>, but not both.</td>
+</tr>
+<tr>
+<td><code>merged_consensusXML</code></td>
+<td>string(path)</td>
+<td>Existing merged consensusXML used instead of mzML extraction.</td>
+</tr>
+<tr>
+<td><code>idXML</code></td>
+<td>string(path)</td>
+<td>Peptide identifications matching the supplied spectra.</td>
+</tr>
+<tr>
+<td><code>output_dir</code></td>
+<td>string(path)</td>
+<td>Root output directory.</td>
+</tr>
+<tr>
+<td><code>plex_name</code></td>
+<td>string</td>
+<td>Name of the plex used in output paths and, for mzML input, consensusXML column filenames.</td>
+</tr>
+<tr>
+<td><code>channel_description</code></td>
+<td>string(path)</td>
+<td>Channel CSV required for mzML extraction.</td>
+</tr>
+<tr>
+<td><code>isobaric_analyzer_type</code></td>
+<td>string</td>
+<td>OpenMS reporter-plex type, such as <code>tmt10plex</code>.</td>
+</tr>
+<tr>
+<td><code>reference_channel</code></td>
+<td>string</td>
+<td>Reference-channel label passed to IsobaricAnalyzer for mzML input.</td>
+</tr>
+<tr>
+<td><code>correction_matrix</code></td>
+<td>string</td>
+<td>Optional isotope-correction rows passed to IsobaricAnalyzer.</td>
+</tr>
+<tr>
+<td><code>enable_tmt_normalization</code></td>
+<td>bool</td>
+<td>Enable the selected normalization method. Defaults to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>tmt_normalization_method</code></td>
+<td>string</td>
+<td><code>openms</code> (default) or <code>mad</code>; OpenMS normalization requires mzML input.</td>
+</tr>
+<tr>
+<td><code>virtual_reference</code></td>
+<td>bool</td>
+<td>Have MADNormalizer derive a reference from each feature's reporter intensities. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>virtual_reference_method</code></td>
+<td>string</td>
+<td><code>median</code> or <code>mean</code> for a virtual MAD reference. MSPtools defaults to <code>median</code>.</td>
+</tr>
+<tr>
+<td><code>mad_normalizer_quasi_intensity</code></td>
+<td>bool</td>
+<td>Write reference-scaled quasi-intensities instead of log2 ratios for MAD. Defaults to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>filter_na_consensus_handles</code></td>
+<td>bool</td>
+<td>Remove NaN reporter handles after MAD normalization. Defaults to <code>false</code> to preserve CSV columns.</td>
+</tr>
+<tr>
+<td><code>protein_quantifier_best_charge_and_fraction</code></td>
+<td>bool</td>
+<td>Report peptide abundances by charge and fraction. Defaults to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>remove_mapped_consensus</code></td>
+<td>bool</td>
+<td>Also publish the consensusXML of unmapped features. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>save_intermediate_files</code></td>
+<td>bool</td>
+<td>Publish intermediate files. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>resource_allocation_profile_tag</code></td>
+<td>string</td>
+<td>Resource profile in <code>config/resources.json</code>. Defaults to <code>default</code>.</td>
+</tr>
+<tr>
+<td><code>base_resource_update</code></td>
+<td>namespace</td>
+<td>Optional per-process CPU and memory adjustments using the shared resource handler.</td>
+</tr>
+<tr>
+<td><code>work_dir</code></td>
+<td>string(path)</td>
+<td>Optional Nextflow work directory.</td>
+</tr>
+</tbody>
+</table>
+<p>Additional OpenMS and MSPtools options and their pipeline parameter names are listed in <a href="../params.rst">docs/params.rst</a>. The default OpenMS and pyOpenMS images use 3.5.0. The default MSPtools image is 1.0.2, which includes MAD quasi-intensity output.</p>
 <hr />
               
             </div>

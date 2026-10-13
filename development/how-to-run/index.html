@@ -51,10 +51,6 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
                 </li>
               </ul>
@@ -67,19 +63,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../discussions/">Discussions</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../contributors/">Contributors</a>
                 </li>
               </ul>
               <ul>
@@ -102,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/35a2629a953281110d25233a32824a0e2f809b5a/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -113,22 +97,30 @@
                 <h2 id="how-to-run">How To Run</h2>
 <ol>
 <li>
-<p>Update the params section of the .config file</p>
+<p>Create a <code>.config</code> using the <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/config/template.config">template</a>. Set <code>output_dir</code>, <code>plex_name</code>, <code>idXML</code>, and exactly one of <code>input_csv</code> or <code>merged_consensusXML</code>. For mzML input, also set <code>channel_description</code> and review the plex type, reference channel, and normalization method.</p>
 </li>
 <li>
-<p>Update the input yaml</p>
+<p>For mzML input, create an <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/input/input.csv">input CSV</a> listing the mzML files and a channel CSV with <code>channel,description</code> columns. A premerged consensusXML already contains channel descriptions in its column headers; it does not use either CSV.</p>
 </li>
 <li>
-<p>See the submission script, <a href="https://github.com/theboutroslab/tool-submit-nf">here</a>, to submit your pipeline</p>
+<p>Initialize the Git submodules and run the pipeline with Nextflow, for example:</p>
 </li>
 </ol>
+<p><code>bash
+   export NXF_VER=24.10.6
+   export NXF_SYNTAX_PARSER=v1
+   nextflow run TheBoutrosLab/pipeline-quantitate-ProteomicTMT -r &lt;version&gt; -c config/my-run.config</code></p>
+<p>The configuration defaults to Docker. Use <code>-profile apptainer</code> or <code>-profile singularity</code> where appropriate; the <code>local</code> profile uses installed executables for development. The <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/.env-template"><code>.env-template</code></a> records the Nextflow version used with the shared configuration modules.</p>
+<blockquote>
+<p>:warning: A single run processes one plex. The merged input must retain its column headers and scan identifiers for ID mapping. Different source files with duplicate native scan IDs must be mapped separately before merging.</p>
+</blockquote>
 <hr />
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../flow-diagram/" class="btn btn-neutral float-right" title="Flow Diagram">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../pipeline-steps/" class="btn btn-neutral float-right" title="Pipeline Steps">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -158,7 +150,7 @@
       <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../flow-diagram/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../pipeline-steps/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
