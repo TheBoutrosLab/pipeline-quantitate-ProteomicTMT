@@ -112,7 +112,7 @@ A premerged consensusXML must already contain channel descriptions in its column
 | `base_resource_update` | namespace | Optional per-process CPU and memory adjustments using the shared resource handler. |
 | `work_dir` | string(path) | Optional Nextflow work directory. |
 
-Additional OpenMS and MSPtools options and their pipeline parameter names are listed in [docs/params.rst](docs/params.rst). The default OpenMS and pyOpenMS images use 3.5.0. The default MSPtools image is 1.0.1; MAD quasi-intensity output requires an image containing `--quasi-intensity`, such as the `dev` image used by the integration tests.
+Additional OpenMS and MSPtools options and their pipeline parameter names are listed in [docs/params.rst](docs/params.rst). The default OpenMS and pyOpenMS images use 3.5.0. The default MSPtools image is 1.0.2, which includes MAD quasi-intensity output.
 
 ---
 

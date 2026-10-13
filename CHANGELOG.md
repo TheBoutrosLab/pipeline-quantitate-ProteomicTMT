@@ -10,7 +10,7 @@
 - Omitted unset optional entry-point paths from defaults so shared schema validation accepts either workflow.
 - Aligned a temporary idXML copy to the merged TMT consensusXML filename for scan-based ID mapping, with a check for duplicate scan IDs across source runs.
 - Read OpenMS 3.5 abundance headers directly through MSPtools during zero-plex cleanup.
-- Added a MAD or OpenMS normalization choice and selected MAD with a physical reference channel for the D’Angelo integration test. The test uses the fixed MSPtools `dev` image until a new release is available.
+- Added a MAD or OpenMS normalization choice and selected MAD with a physical reference channel for the D’Angelo integration test. MSPtools 1.0.2 supplies the required MAD fixes.
 - Made post-MAD NaN-handle removal configurable and disabled it by default. Retaining NaN handles preserves reporter-channel positions in ProteinQuantifier output.
 - Updated the virtual-reference integration case to use the D’Angelo fixtures and MAD median virtual-reference settings; it passed on the cluster with 888 aligned peptide rows.
 - Enabled MSPtools MADNormalizer quasi-intensity output by default, with a parameter to retain normalized log2 ratios when needed. Both MAD integration cases passed with 888 aligned peptide rows each.
