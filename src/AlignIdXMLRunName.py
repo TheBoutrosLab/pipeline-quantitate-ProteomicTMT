@@ -24,6 +24,7 @@ def as_text(value):
 
 
 def main():
+    """Align identification run names and reject ambiguous scan references."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--consensus-xml', required=True)
     parser.add_argument('--input-idxml', required=True)
@@ -56,11 +57,17 @@ def main():
         for peptide in peptides:
             if not peptide.getHits():
                 continue
-            scan = as_text(peptide.getMetaValue('spectrum_reference')) if peptide.metaValueExists('spectrum_reference') else ''
+            scan = (
+                as_text(peptide.getMetaValue('spectrum_reference'))
+                if peptide.metaValueExists('spectrum_reference') else ''
+            )
             if not scan:
                 continue
             paths = paths_by_identifier[peptide.getIdentifier()]
-            index = int(peptide.getMetaValue('id_merge_index')) if peptide.metaValueExists('id_merge_index') else 0
+            index = (
+                int(peptide.getMetaValue('id_merge_index'))
+                if peptide.metaValueExists('id_merge_index') else 0
+            )
             source = paths[index]
             previous = seen_scans.setdefault(scan, source)
             if previous != source:
@@ -78,7 +85,9 @@ def main():
         source_names = {Path(path).name for paths in paths_by_identifier.values() for path in paths}
         missing = filenames - source_names
         if missing:
-            raise ValueError(f'ConsensusXML column filenames lack matching idXML runs: {sorted(missing)}')
+            raise ValueError(
+                f'ConsensusXML column filenames lack matching idXML runs: {sorted(missing)}'
+            )
         print('ConsensusXML has distinct source names; idXML run paths already match.')
 
     IdXMLFile().store(args.output_idxml, proteins, peptides)
