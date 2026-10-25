@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased (2026-10-24)
+## [Unreleased]
+
+## [1.1.0] - 2026-10-24
+
+### Changed
 
 - Select mzML or premerged consensusXML input with `consensusXML_entrypoint`, using the matching source CSV and a separate `idXML.csv` joined by `plex_id`.
 - Keep each plex keyed through extraction, normalization, ID mapping, and peptide quantification, and publish results in separate plex directories.
@@ -11,7 +15,9 @@
 - Mount `src` read-only for Python helper processes instead of staging helper scripts as data inputs.
 - Require a labeled reference channel whenever OpenMS or physical-reference MAD normalization is selected.
 
-## 1.0.0
+## [1.0.0]
+
+### Changed
 
 - Implemented the isobaric quantification workflow with mzML and premerged consensusXML entry points, optional MAD normalization, ID mapping, conflict resolution, and peptide quantification.
 - Added shared schema, resource allocation, container profiles, and NFTest fixture configuration.
@@ -27,3 +33,7 @@
 - Enabled MSPtools MADNormalizer quasi-intensity output by default, with a parameter to retain normalized log2 ratios when needed. Both MAD integration cases passed with 888 aligned peptide rows each.
 - Renamed the required TMT plex identifier from `sample_name` to `plex_name` across configuration, output naming, and integration fixtures.
 - Removed the unused channel CSV from the premerged-consensusXML test and fixed its entry-point configuration. Updated the unmapped-feature script for pyOpenMS 3.5's typed peptide-identification list.
+
+[1.0.0]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/releases/tag/v1.0.0
+[1.1.0]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v1.0.0...v1.1.0
+[unreleased]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v1.1.0...HEAD
