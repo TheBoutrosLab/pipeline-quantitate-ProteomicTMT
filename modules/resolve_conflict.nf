@@ -13,7 +13,7 @@ FLAG_MAPPER = [:]
 process resolve_conflict {
     container params.docker_image_openms
 
-    publishDir params.final_output_dir,
+    publishDir "${params.final_output_dir}/${plex}",
         mode: 'copy',
         pattern: "*.consensusXML"
 
@@ -23,14 +23,14 @@ process resolve_conflict {
         saveAs: { "log${file(it).name}" }
 
     input:
-        file consensusXML
+        tuple val(plex), path(consensusXML)
 
     output:
-        file output_file
+        tuple val(plex), path(output_file)
         file ".command.*"
 
     script:
-    output_file = "${params.plex_name}_IDConflictResolver.consensusXML"
+    output_file = "${plex}_IDConflictResolver.consensusXML"
     extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
     """
     IDConflictResolver \\

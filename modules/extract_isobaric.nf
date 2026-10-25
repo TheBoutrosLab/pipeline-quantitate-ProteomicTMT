@@ -9,7 +9,6 @@ FLAGS = [
 ]
 
 PARAMETER_MAPPER = [
-    'isobaric_analyzer_type': '-type',
     'isobaric_analyzer_extraction_select_activation': '-extraction:select_activation',
     'isobaric_analyzer_extraction_reporter_mass_shift': '-extraction:reporter_mass_shift',
     'isobaric_analyzer_extraction_min_precursor_intensity': '-extraction:min_precursor_intensity',
@@ -28,7 +27,7 @@ FLAG_MAPPER = [
 process extract_isobaric {
     container params.docker_image_openms
 
-    publishDir "${params.intermediate_file_dir}/${task.process.replace(':', '/')}/",
+    publishDir "${params.intermediate_file_dir}/${plex}/${task.process.replace(':', '/')}/",
         mode: 'copy',
         enabled: params.save_intermediate_files,
         pattern: "*.consensusXML"
@@ -39,24 +38,23 @@ process extract_isobaric {
         saveAs: { "log${file(it).name}" }
 
     input:
-        file mzML
-        val channels
+        tuple val(plex), val(order), path(mzML), val(channels), val(plex_type), val(reference), val(correction)
 
     output:
-        file(consensusXML)
+        tuple val(plex), val(order), path(consensusXML)
         file ".command.*"
 
     script:
     consensusXML = "${mzML.baseName}.consensusXML"
-    extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
+    extra_args = " -type ${plex_type}" + getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
     for (chn in channels) {
-        extra_args += " -${params.isobaric_analyzer_type}:channel_${chn[0]}_description ${chn[1]}"
+        extra_args += " -${plex_type}:channel_${chn[0]}_description ${chn[1]}"
     }
-    if (params.correction_matrix != null) {
-        extra_args += " -${params.isobaric_analyzer_type}:correction_matrix ${params.correction_matrix}"
+    if (correction) {
+        extra_args += " -${plex_type}:correction_matrix ${correction}"
     }
-    if (params.reference_channel != null) {
-        extra_args += " -${params.isobaric_analyzer_type}:reference_channel ${params.reference_channel}"
+    if (reference) {
+        extra_args += " -${plex_type}:reference_channel ${reference}"
     }
     if (params.enable_tmt_normalization && params.tmt_normalization_method == 'openms') {
         extra_args += " -quantification:normalization"

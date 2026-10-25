@@ -21,7 +21,7 @@ FLAG_MAPPER = [
 process normalize_consensusXML_MAD {
     container params.docker_image_msptools
 
-    publishDir "${params.intermediate_file_dir}/${task.process.replace(':', '/')}/",
+    publishDir "${params.intermediate_file_dir}/${plex}/${task.process.replace(':', '/')}/",
         mode: 'copy',
         enabled: params.save_intermediate_files,
         pattern: "*.consensusXML"
@@ -32,10 +32,10 @@ process normalize_consensusXML_MAD {
         saveAs: { "log${file(it).name}" }
 
     input:
-        file input_consensus
+        tuple val(plex), path(input_consensus)
 
     output:
-        file output_consensus
+        tuple val(plex), path(output_consensus)
         file ".command.*"
 
     script:

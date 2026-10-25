@@ -1,8 +1,9 @@
 
 process set_ConsensusXMLFilename {
     container params.docker_image_pyopenms
+    containerOptions params.project_script_mount_options
 
-    publishDir "${params.intermediate_file_dir}/${task.process.replace(':', '/')}/",
+    publishDir "${params.intermediate_file_dir}/${plex}/${task.process.replace(':', '/')}/",
         mode: 'copy',
         enabled: params.save_intermediate_files,
         pattern: "*.consensusXML"
@@ -13,19 +14,18 @@ process set_ConsensusXMLFilename {
         saveAs: { "log${file(it).name}" }
 
     input:
-        file input_consensus
-        path script_file
+        tuple val(plex), path(input_consensus)
 
     output:
-        file output_consensus
+        tuple val(plex), path(output_consensus)
         file ".command.*"
 
     script:
     output_consensus = "${input_consensus.baseName}_renamed.consensusXML"
     """
-    python ${script_file} \\
+    python ${projectDir}/src/ConsensusXMLFileRenamer.py \\
         --input-path ${input_consensus} \\
         --output-path ${output_consensus} \\
-        --filename ${params.plex_name}
+        --filename ${plex}
     """
 }

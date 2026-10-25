@@ -18,7 +18,7 @@ FLAG_MAPPER = [:]
 process fix_ProteinQuantCSV_unquantified {
     container params.docker_image_msptools
 
-    publishDir "${params.final_output_dir}",
+    publishDir "${params.final_output_dir}/${plex}",
         mode: 'copy',
         pattern: "*_fixZeroPlex.csv",
         enabled: params.enable_tmt_normalization == true
@@ -29,16 +29,14 @@ process fix_ProteinQuantCSV_unquantified {
         saveAs: { "log${file(it).name}" }
 
     input:
-        path input_csv
-        path consensusXML
+        tuple val(plex), path(input_csv), path(consensusXML)
 
     output:
-        path output_csv
-        path consensusXML
+        tuple val(plex), path(output_csv)
         file ".command.*"
 
     script:
-    output_csv = "${params.plex_name}_ProteinQuantifier_peptide_fixZeroPlex.csv"
+    output_csv = "${plex}_ProteinQuantifier_peptide_fixZeroPlex.csv"
     extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
     // Charge-aggregated peptide rows use charge 0; the consensusXML lookup
     // expects the individual charge reported with -best_charge_and_fraction.

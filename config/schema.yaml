@@ -3,30 +3,34 @@ output_dir:
   mode: w
   required: true
   help: Root output directory.
-plex_name:
+mzML_csv:
+  type: Path
+  mode: r
+  required: false
+  help: mzML files for one or more TMT plexes.
+channel_csv:
+  type: Path
+  mode: r
+  required: false
+  help: Reporter channels and sample descriptions keyed by plex_id for mzML input.
+plex_type:
   type: String
+  required: false
+  help: OpenMS reporter type shared by all plexes in an mzML run.
+consensusXML_csv:
+  type: Path
+  mode: r
+  required: false
+  help: One premerged consensusXML file per TMT plex.
+consensusXML_entrypoint:
+  type: Bool
+  required: false
+  help: Use consensusXML_csv instead of mzML_csv when true.
+idXML_csv:
+  type: Path
+  mode: r
   required: true
-  help: Name of the TMT plex used in consensusXML headers and output paths.
-idXML:
-  type: Path
-  mode: r
-  required: true
-  help: Combined peptide identifications in idXML format.
-input_csv:
-  type: Path
-  mode: r
-  required: false
-  help: CSV containing mzML paths for one TMT plex.
-merged_consensusXML:
-  type: Path
-  mode: r
-  required: false
-  help: Existing merged consensusXML used instead of mzML extraction.
-channel_description:
-  type: Path
-  mode: r
-  required: false
-  help: Reporter channel descriptions for mzML extraction.
+  help: One matching idXML file per plex.
 protein_quantifier_best_charge_and_fraction:
   type: Bool
   required: false

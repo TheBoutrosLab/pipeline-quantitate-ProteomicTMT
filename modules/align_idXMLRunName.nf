@@ -1,7 +1,8 @@
 process align_idXMLRunName {
     container params.docker_image_pyopenms
+    containerOptions params.project_script_mount_options
 
-    publishDir "${params.intermediate_file_dir}/${task.process.replace(':', '/')}/",
+    publishDir "${params.intermediate_file_dir}/${plex}/${task.process.replace(':', '/')}/",
         mode: 'copy',
         enabled: params.save_intermediate_files,
         pattern: '*.idXML'
@@ -12,18 +13,16 @@ process align_idXMLRunName {
         saveAs: { "log${file(it).name}" }
 
     input:
-        path consensusXML
-        path idXML
-        path script_file
+        tuple val(plex), path(consensusXML), path(idXML)
 
     output:
-        path output_idXML
+        tuple val(plex), path(output_idXML)
         path '.command.*'
 
     script:
-    output_idXML = "${params.plex_name}_aligned.idXML"
+    output_idXML = "${plex}_aligned.idXML"
     """
-    python ${script_file} \\
+    python ${projectDir}/src/AlignIdXMLRunName.py \\
         --consensus-xml ${consensusXML} \\
         --input-idxml ${idXML} \\
         --output-idxml ${output_idXML}

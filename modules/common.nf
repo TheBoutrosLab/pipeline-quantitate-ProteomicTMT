@@ -44,7 +44,8 @@ def getArgsGeneral(ArrayList parameters, ArrayList flags, Map parameter_mapper, 
 def printPrelogue(){
     def options = [:]
     exclude_args = [
-        'input_csv', 'decoy_database', 'output_dir', 'openms_version', 'docker_image_openms',
+        'mzML_csv', 'consensusXML_csv', 'idXML_csv', 'channel_csv', 'decoy_database', 'output_dir', 'openms_version', 'docker_image_openms',
+        'project_script_mount_options',
         'max_cpus', 'max_memory', 'philosopher_version', 'docker_image_philosopher',
         'intermediate_file_dir', 'process_log_dir', 'pipeline_log_dir', 'idXML', 'mzML', 'mz-ML',
         'id-XML'
@@ -72,8 +73,10 @@ def printPrelogue(){
             version: ${workflow.manifest.version}
 
         - input:
-            input_csv : ${params.input_csv}
-            idXML     : ${params.idXML}
+            mzML_csv       : ${params.containsKey('mzML_csv') ? params.mzML_csv : 'not set'}
+            consensusXML_csv: ${params.containsKey('consensusXML_csv') ? params.consensusXML_csv : 'not set'}
+            idXML_csv      : ${params.idXML_csv}
+            channel_csv    : ${params.containsKey('channel_csv') ? params.channel_csv : 'not set'}
 
         - output:
             output_dir: ${params.output_dir}
