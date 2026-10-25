@@ -17,12 +17,12 @@ FLAG_MAPPER = [
 process quantify_peptides {
     container params.docker_image_openms
 
-    publishDir params.final_output_dir,
+    publishDir "${params.final_output_dir}/${plex}",
         mode: 'copy',
         pattern: "*.csv",
         enabled: params.enable_tmt_normalization == false
 
-    publishDir "${params.intermediate_file_dir}/${task.process.replace(':','/')}",
+    publishDir "${params.intermediate_file_dir}/${plex}/${task.process.replace(':','/')}",
         enabled: params.save_intermediate_files,
         mode: 'copy',
         pattern: "*.csv"
@@ -33,14 +33,14 @@ process quantify_peptides {
         saveAs: { "log${file(it).name}" }
 
     input:
-        file consensusXML
+        tuple val(plex), path(consensusXML)
 
     output:
-        file peptide_out
+        tuple val(plex), path(peptide_out)
         file ".command.*"
 
     script:
-    peptide_out = "${params.plex_name}_ProteinQuantifier_peptide.csv"
+    peptide_out = "${plex}_ProteinQuantifier_peptide.csv"
     extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
     """
     ProteinQuantifier \\

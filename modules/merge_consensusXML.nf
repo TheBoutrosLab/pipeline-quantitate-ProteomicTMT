@@ -15,7 +15,7 @@ FLAG_MAPPER = [:]
 process merge_consensusXML {
     container params.docker_image_openms
 
-    publishDir params.final_output_dir,
+    publishDir "${params.final_output_dir}/${plex}",
         mode: 'copy',
         pattern: "*.consensusXML"
 
@@ -25,14 +25,14 @@ process merge_consensusXML {
         saveAs: { "log${file(it).name}" }
 
     input:
-        file consensusXML
+        tuple val(plex), path(consensusXML)
 
     output:
-        file output_file
+        tuple val(plex), path(output_file)
         file ".command.*"
 
     script:
-    output_file = "${params.plex_name}_FileMerger.consensusXML"
+    output_file = "${plex}_FileMerger.consensusXML"
     extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
     """
     FileMerger \\

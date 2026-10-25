@@ -10,10 +10,10 @@ extract_isobaric
 .. list-table::
    :header-rows: 1
 
-   * - Config key
+   * - Config key or manifest field
      - Command option
      - Kind
-   * - ``isobaric_analyzer_type``
+   * - Config ``plex_type``
      - ``-type``
      - value
    * - ``isobaric_analyzer_extraction_select_activation``
@@ -163,4 +163,4 @@ resolve_conflict
 Extraction-specific inputs
 --------------------------
 
-``isobaric_analyzer_type`` sets ``-type``. ``reference_channel`` and ``correction_matrix`` use options under the selected plex type. Every row of ``channel_description`` supplies a reporter channel description. ``tmt_normalization_method`` selects ``mad`` (default) or ``openms``. OpenMS normalization runs in IsobaricAnalyzer and requires mzML input; MAD normalization runs after consensusXML merging. ``enable_tmt_normalization = false`` skips both. ``protein_quantifier_best_charge_and_fraction`` defaults to true and controls ``-best_charge_and_fraction``. Set it to false to omit the flag.
+The run-level ``plex_type`` sets ``-type`` for every mzML plex. The ``channel_csv`` groups reporter descriptions by ``plex_id``. A row whose description is ``reference`` supplies that plex's ``-reference_channel``; optional ``correction_matrix`` values in ``mzML.csv`` use an option under the reporter type. ``tmt_normalization_method`` selects ``openms`` (default) or ``mad`` for every plex in the run. OpenMS normalization runs in IsobaricAnalyzer and requires mzML input for every plex; MAD normalization runs independently on each plex after consensusXML merging. ``enable_tmt_normalization = false`` skips both. ``protein_quantifier_best_charge_and_fraction`` defaults to true and controls ``-best_charge_and_fraction``. Set it to false to omit the flag.

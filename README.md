@@ -16,15 +16,15 @@
 
 ## Overview
 
-This Nextflow DSL2 pipeline quantifies peptides from one isobaric-labeled TMT plex. It combines reporter-ion measurements with peptide identifications using OpenMS and MSPtools. One run accepts either an mzML CSV plus an idXML, or a premerged consensusXML plus an idXML. The reporter channels are samples within the plex; every mzML row in one run must belong to that plex.
+This Nextflow DSL2 pipeline quantifies peptides from one or more separate TMT plexes in a single run. Each plex has its own reporter channels and idXML. A plex can start from one or more mzML files or one premerged consensusXML. The pipeline publishes peptide results separately for each plex; cross-plex peptide integration belongs in quantitate-ProteomicProtein.
 
 ---
 
 ## How To Run
 
-1. Create a `.config` using the [template](config/template.config). Set `output_dir`, `plex_name`, `idXML`, and exactly one of `input_csv` or `merged_consensusXML`. For mzML input, also set `channel_description` and review the plex type, reference channel, and normalization method.
+1. Create a `.config` using the [template](config/template.config). Set `output_dir`, `idXML_csv`, `mzML_csv`, and `channel_csv`. For premerged input, set `consensusXML_entrypoint = true` and use `consensusXML_csv` in place of `mzML_csv` and `channel_csv`. The entry-point flag selects which source CSV is read. Choose a normalization method for the run.
 
-2. For mzML input, create an [input CSV](input/input.csv) listing the mzML files and a channel CSV with `channel,description` columns. A premerged consensusXML already contains channel descriptions in its column headers; it does not use either CSV.
+2. Create an [mzML CSV](input/mzML.csv) or [consensusXML CSV](input/consensusXML.csv), plus an [idXML CSV](input/idXML.csv). Use one mzML row per fraction or one consensusXML row per plex. For mzML input, supply one [channel CSV](input/channel.csv) with rows keyed by plex ID. Use one idXML row per plex.
 
 3. Initialize the Git submodules and run the pipeline with Nextflow, for example:
 
@@ -36,15 +36,15 @@ This Nextflow DSL2 pipeline quantifies peptides from one isobaric-labeled TMT pl
 
    The configuration defaults to Docker. Use `-profile apptainer` or `-profile singularity` where appropriate; the `local` profile uses installed executables for development. The [`.env-template`](.env-template) records the Nextflow version used with the shared configuration modules.
 
-> :warning: A single run processes one plex. The merged input must retain its column headers and scan identifiers for ID mapping. Different source files with duplicate native scan IDs must be mapped separately before merging.
+> :warning: mzML files within one plex must have distinct basenames and distinct native scan IDs wherever they have identifications. A premerged consensusXML must retain its column headers and scan identifiers for ID mapping.
 
 ---
 
 ## Pipeline Steps
 
-For mzML input, `FileFilter` sorts each file, `IsobaricAnalyzer` extracts reporter ions, and `FileMerger` appends the consensus features. The pipeline sets the merged column filenames to `plex_name`. The premerged entry point starts with the supplied consensusXML.
+For each mzML plex, `FileFilter` sorts its files, `IsobaricAnalyzer` extracts its reporter ions, and `FileMerger` appends its consensus features. The pipeline sets that plex's merged column filenames to its `plex_id`. A premerged plex starts with its supplied consensusXML. Plex IDs stay attached to every downstream process, so files from separate plexes do not merge.
 
-Normalization is enabled by default. The default `tmt_normalization_method = 'openms'` uses IsobaricAnalyzer's median-ratio normalization and requires mzML input. Set it to `mad` to use MSPtools MADNormalizer after merging. MAD normalization can use a physical reference identified by a column description of `reference`, or a virtual reference computed from reporter intensities. With `mad_normalizer_quasi_intensity = true` (default), MADNormalizer writes reference-scaled quasi-intensities; set it to `false` for normalized log2 ratios. NaN reporter handles are retained by default so missing channels keep their positions in the peptide CSV. Set `enable_tmt_normalization = false` to skip both normalization methods.
+Normalization is enabled by default and uses one method across the run. The default `tmt_normalization_method = 'openms'` uses IsobaricAnalyzer's median-ratio normalization; all plexes must then use mzML input. Set it to `mad` to use MSPtools MADNormalizer independently on each plex after merging. MAD normalization can use a physical reference identified by a column description of `reference`, or a virtual reference computed from reporter intensities. With `mad_normalizer_quasi_intensity = true` (default), MADNormalizer writes reference-scaled quasi-intensities; set it to `false` for normalized log2 ratios. NaN reporter handles are retained by default so missing channels keep their positions in the peptide CSV. Set `enable_tmt_normalization = false` to skip both normalization methods.
 
 Before `IDMapper`, the pipeline aligns a temporary idXML copy's run names to the consensusXML column filename. `IDConflictResolver` resolves mapped peptide assignments, and `ProteinQuantifier` writes peptide abundances. When normalization is enabled, MSPtools marks all-zero plexes as missing in the final CSV. It also checks unquantified reporter channels against the consensusXML when `protein_quantifier_best_charge_and_fraction = true`. Set `remove_mapped_consensus = true` to also publish unmapped features.
 
@@ -52,55 +52,83 @@ Before `IDMapper`, the pipeline aligns a temporary idXML copy's run names to the
 
 ## Inputs
 
-### Input CSV
+### mzML CSV
 
-For the mzML entry point, the CSV has one column and one mzML path per row. All rows belong to the same plex; multiple rows can represent fractions of that plex.
+With `consensusXML_entrypoint = false` (default), use `mzML_csv`. It has one row per mzML fraction. Rows with the same `plex_id` belong to one plex. Set the shared reporter type once with `plex_type` in the run config.
 
 | Field | Required | Description |
 | ----- | -------- | ----------- |
-| `path` | yes | Absolute path to an mzML file. |
+| `plex_id` | yes | Unique plex identifier using letters, digits, dots, underscores, or hyphens. |
+| `mzML` | yes | Absolute path to this fraction's mzML. |
+| `correction_matrix` | optional | Isotope-correction rows passed to IsobaricAnalyzer; applies to mzML input. |
 
 ```csv
-path
-/data/plex_01_fraction_1.mzML
-/data/plex_01_fraction_2.mzML
+plex_id,mzML
+plex_01,/data/plex_01_fraction_1.mzML
+plex_01,/data/plex_01_fraction_2.mzML
 ```
 
-Use [input/input.csv](input/input.csv) as a template. For the premerged entry point, set `merged_consensusXML` instead of `input_csv`.
+Use [input/mzML.csv](input/mzML.csv) as a template. Paths must be accessible to Nextflow and the configured containers.
+
+### consensusXML CSV
+
+With `consensusXML_entrypoint = true`, use `consensusXML_csv`. It has exactly one `consensusXML` path per `plex_id` and requires no channel CSV; channel descriptions must already be in the consensusXML headers.
+
+```csv
+plex_id,consensusXML
+plex_01,/data/plex_01.consensusXML
+plex_02,/data/plex_02.consensusXML
+```
+
+Use [input/consensusXML.csv](input/consensusXML.csv) as a template.
+
+### idXML CSV
+
+The idXML CSV has exactly one row per plex. Its `plex_id` values must match the chosen source CSV exactly, including for a multi-fraction plex.
+
+```csv
+plex_id,idXML
+plex_01,/data/plex_01.idXML
+plex_02,/data/plex_02.idXML
+```
+
+Use [input/idXML.csv](input/idXML.csv) as a template.
 
 ### Channel CSV
 
-The mzML entry point also requires a CSV of reporter-channel labels. The labels must match `isobaric_analyzer_type`. For physical-reference MAD normalization, mark the reference channel with the description `reference`.
+For mzML input, provide one `channel_csv` containing every plex's reporter channels. Its `plex_id` values must match the mzML CSV exactly. The pipeline groups these rows by plex ID and passes only that plex's channels to IsobaricAnalyzer. Reporter labels must match the run's `plex_type`. Sample names belong in the `description` column. Label one channel per plex `reference` when using OpenMS normalization or MAD normalization with a physical reference; its reporter label is passed to IsobaricAnalyzer. MAD normalization with a virtual reference does not require this label.
 
 | Field | Required | Description |
 | ----- | -------- | ----------- |
+| `plex_id` | yes | Plex identifier matching the mzML and idXML CSVs. |
 | `channel` | yes | Reporter label, such as `126` or `127N` for TMT10plex. |
 | `description` | yes | Channel identifier; use `reference` for a physical MAD reference. |
 
 ```csv
-channel,description
-126,reference
-127N,sample_01
-127C,sample_02
+plex_id,channel,description
+plex_01,126,reference
+plex_01,127N,sample_01
+plex_02,126,reference
+plex_02,127N,sample_02
 ```
 
-A premerged consensusXML must already contain channel descriptions in its column headers. The `channel_description` parameter is ignored for that entry point.
+Use [input/channel.csv](input/channel.csv) as a channel CSV template.
+
+A premerged consensusXML must already contain channel descriptions in its column headers.
 
 ### Config
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| `input_csv` | string(path) | mzML CSV. Set this or `merged_consensusXML`, but not both. |
-| `merged_consensusXML` | string(path) | Existing merged consensusXML used instead of mzML extraction. |
-| `idXML` | string(path) | Peptide identifications matching the supplied spectra. |
+| `consensusXML_entrypoint` | bool | Select the premerged consensusXML entry point. Defaults to `false` (mzML). |
+| `mzML_csv` | string(path) | mzML fractions; required when `consensusXML_entrypoint = false`. |
+| `channel_csv` | string(path) | Reporter channels and sample descriptions keyed by plex ID; required for mzML input. |
+| `plex_type` | string | OpenMS reporter type shared by all plexes; required for mzML input. |
+| `consensusXML_csv` | string(path) | One premerged consensusXML per plex; required when `consensusXML_entrypoint = true`. |
+| `idXML_csv` | string(path) | Required CSV with one idXML path per plex. |
 | `output_dir` | string(path) | Root output directory. |
-| `plex_name` | string | Name of the plex used in output paths and, for mzML input, consensusXML column filenames. |
-| `channel_description` | string(path) | Channel CSV required for mzML extraction. |
-| `isobaric_analyzer_type` | string | OpenMS reporter-plex type, such as `tmt10plex`. |
-| `reference_channel` | string | Reference-channel label passed to IsobaricAnalyzer for mzML input. |
-| `correction_matrix` | string | Optional isotope-correction rows passed to IsobaricAnalyzer. |
 | `enable_tmt_normalization` | bool | Enable the selected normalization method. Defaults to `true`. |
-| `tmt_normalization_method` | string | `openms` (default) or `mad`; OpenMS normalization requires mzML input. |
+| `tmt_normalization_method` | string | `openms` (default) or `mad`; OpenMS normalization requires every plex to use mzML input. |
 | `virtual_reference` | bool | Have MADNormalizer derive a reference from each feature's reporter intensities. Defaults to `false`. |
 | `virtual_reference_method` | string | `median` or `mean` for a virtual MAD reference. MSPtools defaults to `median`. |
 | `mad_normalizer_quasi_intensity` | bool | Write reference-scaled quasi-intensities instead of log2 ratios for MAD. Defaults to `true`. |
@@ -118,18 +146,18 @@ Additional OpenMS and MSPtools options and their pipeline parameter names are li
 
 ## Outputs
 
-Final results are saved under `<output_dir>/quantitate-ProteomicTMT-<version>/<plex_name>/OpenMS-<version>/output/`:
+Final results are saved under `<output_dir>/quantitate-ProteomicTMT-<version>/OpenMS-<version>/output/<plex_id>/`:
 
 | Output | Description |
 | ------ | ----------- |
-| `<plex_name>_FileMerger.consensusXML` | Merged reporter-ion features, for mzML input. |
-| `<plex_name>_IDMapper.consensusXML` | Consensus features with peptide identifications mapped to them. |
-| `<plex_name>_IDConflictResolver.consensusXML` | Consensus features after conflicting identifications are resolved. |
-| `<plex_name>_ProteinQuantifier_peptide_fixZeroPlex.csv` | Final peptide abundances when normalization is enabled. |
-| `<plex_name>_ProteinQuantifier_peptide.csv` | Final peptide abundances when normalization is disabled. |
-| `<plex_name>_unmapped.consensusXML` | Unmapped features, when `remove_mapped_consensus = true`. |
+| `<plex_id>_FileMerger.consensusXML` | Merged reporter-ion features, for mzML input. |
+| `<plex_id>_IDMapper.consensusXML` | Consensus features with peptide identifications mapped to them. |
+| `<plex_id>_IDConflictResolver.consensusXML` | Consensus features after conflicting identifications are resolved. |
+| `<plex_id>_ProteinQuantifier_peptide_fixZeroPlex.csv` | Final peptide abundances when normalization is enabled. |
+| `<plex_id>_ProteinQuantifier_peptide.csv` | Final peptide abundances when normalization is disabled. |
+| `<plex_id>_unmapped.consensusXML` | Unmapped features, when `remove_mapped_consensus = true`. |
 
-Intermediate files are published under `intermediate/` when `save_intermediate_files = true`. Process logs and Nextflow reports are written under the timestamped `log-quantitate-ProteomicTMT-*` directory. Three NFTest integration cases are defined in [nftest.yml](nftest.yml); fixture setup is described in [test/README.md](test/README.md).
+Intermediate files are published under `intermediate/<plex_id>/` when `save_intermediate_files = true`. Process logs and Nextflow reports are written under the timestamped `log-quantitate-ProteomicTMT-*` directory. Three NFTest integration cases are defined in [nftest.yml](nftest.yml); fixture setup is described in [test/README.md](test/README.md).
 
 ---
 

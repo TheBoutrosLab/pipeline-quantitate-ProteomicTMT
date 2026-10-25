@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased (2026-10-24)
+
+- Select mzML or premerged consensusXML input with `consensusXML_entrypoint`, using the matching source CSV and a separate `idXML.csv` joined by `plex_id`.
+- Keep each plex keyed through extraction, normalization, ID mapping, and peptide quantification, and publish results in separate plex directories.
+- Preserve the mzML CSV fraction order when parallel extraction feeds FileMerger.
+- Convert the integration cases to entry-point-specific and idXML CSVs, with multi-plex coverage in the existing cases.
+- Configure one `plex_type` per mzML run and derive each plex's reference channel from its channel descriptions.
+- Supply one `channel_csv` keyed by `plex_id` so reporter descriptions are joined to each mzML plex without repeating channel paths in the mzML CSV.
+- Mount `src` read-only for Python helper processes instead of staging helper scripts as data inputs.
+- Require a labeled reference channel whenever OpenMS or physical-reference MAD normalization is selected.
+
 ## 1.0.0
 
 - Implemented the isobaric quantification workflow with mzML and premerged consensusXML entry points, optional MAD normalization, ID mapping, conflict resolution, and peptide quantification.

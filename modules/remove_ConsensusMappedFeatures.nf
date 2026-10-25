@@ -1,8 +1,9 @@
 
 process remove_ConsensusMappedFeatures {
     container params.docker_image_pyopenms
+    containerOptions params.project_script_mount_options
 
-    publishDir params.final_output_dir,
+    publishDir "${params.final_output_dir}/${plex}",
         mode: 'copy',
         pattern: "*.consensusXML"
 
@@ -12,17 +13,16 @@ process remove_ConsensusMappedFeatures {
         saveAs: { "log${file(it).name}" }
 
     input:
-        file input_consensus
-        path script_file
+        tuple val(plex), path(input_consensus)
 
     output:
-        file output_consensus
+        tuple val(plex), path(output_consensus)
         file ".command.*"
 
     script:
-    output_consensus = "${params.plex_name}_unmapped.consensusXML"
+    output_consensus = "${plex}_unmapped.consensusXML"
     """
-    python ${script_file} \\
+    python ${projectDir}/src/ConsensusIDRemover.py \\
         --input-path ${input_consensus} \\
         --output-path ${output_consensus}
     """

@@ -25,11 +25,11 @@ FLAG_MAPPER = [
 process map_idXML2consensusXML {
     container params.docker_image_openms
 
-    publishDir params.final_output_dir,
+    publishDir "${params.final_output_dir}/${plex}",
         mode: 'copy',
         pattern: "*.consensusXML"
 
-    publishDir "${params.intermediate_file_dir}/${task.process.replace(':', '/')}/",
+    publishDir "${params.intermediate_file_dir}/${plex}/${task.process.replace(':', '/')}/",
         mode: 'copy',
         enabled: params.save_intermediate_files,
         pattern: "*.consensusXML"
@@ -40,15 +40,14 @@ process map_idXML2consensusXML {
         saveAs: { "log${file(it).name}" }
 
     input:
-        path consensusXML
-        path idXML
+        tuple val(plex), path(consensusXML), path(idXML)
 
     output:
-        file output_file
+        tuple val(plex), path(output_file)
         file ".command.*"
 
     script:
-    output_file = "${params.plex_name}_IDMapper.consensusXML"
+    output_file = "${plex}_IDMapper.consensusXML"
     extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
     """
     IDMapper \\
