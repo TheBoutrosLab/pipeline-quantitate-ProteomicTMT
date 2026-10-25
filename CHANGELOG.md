@@ -9,6 +9,7 @@
 - Configure one `plex_type` per mzML run and derive each plex's reference channel from its channel descriptions.
 - Supply one `channel_csv` keyed by `plex_id` so reporter descriptions are joined to each mzML plex without repeating channel paths in the mzML CSV.
 - Mount `src` read-only for Python helper processes instead of staging helper scripts as data inputs.
+- Require a labeled reference channel whenever OpenMS or physical-reference MAD normalization is selected.
 
 ## 1.0.0
 

@@ -96,7 +96,7 @@ Use [input/idXML.csv](input/idXML.csv) as a template.
 
 ### Channel CSV
 
-For mzML input, provide one `channel_csv` containing every plex's reporter channels. Its `plex_id` values must match the mzML CSV exactly. The pipeline groups these rows by plex ID and passes only that plex's channels to IsobaricAnalyzer. Reporter labels must match the run's `plex_type`. Sample names belong in the `description` column. Label one channel per plex `reference` when using a physical reference; its reporter label is passed to IsobaricAnalyzer.
+For mzML input, provide one `channel_csv` containing every plex's reporter channels. Its `plex_id` values must match the mzML CSV exactly. The pipeline groups these rows by plex ID and passes only that plex's channels to IsobaricAnalyzer. Reporter labels must match the run's `plex_type`. Sample names belong in the `description` column. Label one channel per plex `reference` when using OpenMS normalization or MAD normalization with a physical reference; its reporter label is passed to IsobaricAnalyzer. MAD normalization with a virtual reference does not require this label.
 
 | Field | Required | Description |
 | ----- | -------- | ----------- |

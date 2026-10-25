@@ -118,6 +118,13 @@ def prepare_mzml_plexes(List mzml_rows, List id_rows, List channel_rows) {
         def references = channels.findAll { it[1].equalsIgnoreCase('reference') }
         if (references.size() > 1) error "Plex ${plex}: channel CSV has multiple reference channels."
         def reference = references ? references[0][0] : ''
+        // OpenMS always normalizes to a physical channel; MAD requires one
+        // unless it computes a virtual reference.
+        def needs_reference = params.enable_tmt_normalization &&
+            (params.tmt_normalization_method == 'openms' || !params.virtual_reference)
+        if (needs_reference && !reference) {
+            error "Plex ${plex}: label one channel 'reference' for ${params.tmt_normalization_method} normalization."
+        }
         tuple(plex, sources, file(ids[plex], checkIfExists: true), channels,
               params.plex_type, reference,
               first.correction_matrix?.trim() ?: '')
