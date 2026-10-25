@@ -86,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b35383753c4d9dc414451e62528b89cb4b0161ec/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -97,10 +97,10 @@
                 <h2 id="how-to-run">How To Run</h2>
 <ol>
 <li>
-<p>Create a <code>.config</code> using the <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/config/template.config">template</a>. Set <code>output_dir</code>, <code>idXML_csv</code>, <code>mzML_csv</code>, and <code>channel_csv</code>. For premerged input, set <code>consensusXML_entrypoint = true</code> and use <code>consensusXML_csv</code> in place of <code>mzML_csv</code> and <code>channel_csv</code>. The entry-point flag selects which source CSV is read. Choose a normalization method for the run.</p>
+<p>Create a <code>.config</code> using the <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b35383753c4d9dc414451e62528b89cb4b0161ec/config/template.config">template</a>. Set <code>output_dir</code>, <code>idXML_csv</code>, <code>mzML_csv</code>, and <code>channel_csv</code>. For premerged input, set <code>consensusXML_entrypoint = true</code> and use <code>consensusXML_csv</code> in place of <code>mzML_csv</code> and <code>channel_csv</code>. The entry-point flag selects which source CSV is read. Choose a normalization method for the run.</p>
 </li>
 <li>
-<p>Create an <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/input/mzML.csv">mzML CSV</a> or <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/input/consensusXML.csv">consensusXML CSV</a>, plus an <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/input/idXML.csv">idXML CSV</a>. Use one mzML row per fraction or one consensusXML row per plex. For mzML input, supply one <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/input/channel.csv">channel CSV</a> with rows keyed by plex ID. Use one idXML row per plex.</p>
+<p>Create an <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b35383753c4d9dc414451e62528b89cb4b0161ec/input/mzML.csv">mzML CSV</a> or <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b35383753c4d9dc414451e62528b89cb4b0161ec/input/consensusXML.csv">consensusXML CSV</a>, plus an <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b35383753c4d9dc414451e62528b89cb4b0161ec/input/idXML.csv">idXML CSV</a>. Use one mzML row per fraction or one consensusXML row per plex. For mzML input, supply one <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b35383753c4d9dc414451e62528b89cb4b0161ec/input/channel.csv">channel CSV</a> with rows keyed by plex ID. Use one idXML row per plex.</p>
 </li>
 <li>
 <p>Initialize the Git submodules and run the pipeline with Nextflow, for example:</p>
@@ -110,7 +110,7 @@
    export NXF_VER=24.10.6
    export NXF_SYNTAX_PARSER=v1
    nextflow run TheBoutrosLab/pipeline-quantitate-ProteomicTMT -r &lt;version&gt; -c config/my-run.config</code></p>
-<p>The configuration defaults to Docker. Use <code>-profile apptainer</code> or <code>-profile singularity</code> where appropriate; the <code>local</code> profile uses installed executables for development. The <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/.env-template"><code>.env-template</code></a> records the Nextflow version used with the shared configuration modules.</p>
+<p>The configuration defaults to Docker. Use <code>-profile apptainer</code> or <code>-profile singularity</code> where appropriate; the <code>local</code> profile uses installed executables for development. The <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b35383753c4d9dc414451e62528b89cb4b0161ec/.env-template"><code>.env-template</code></a> records the Nextflow version used with the shared configuration modules.</p>
 <blockquote>
 <p>:warning: mzML files within one plex must have distinct basenames and distinct native scan IDs wherever they have identifications. A premerged consensusXML must retain its column headers and scan identifiers for ID mapping.</p>
 </blockquote>
