@@ -86,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Overview</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -95,7 +95,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="overview">Overview</h2>
-<p>This Nextflow DSL2 pipeline quantifies peptides from one isobaric-labeled TMT plex. It combines reporter-ion measurements with peptide identifications using OpenMS and MSPtools. One run accepts either an mzML CSV plus an idXML, or a premerged consensusXML plus an idXML. The reporter channels are samples within the plex; every mzML row in one run must belong to that plex.</p>
+<p>This Nextflow DSL2 pipeline quantifies peptides from one or more separate TMT plexes in a single run. Each plex has its own reporter channels and idXML. A plex can start from one or more mzML files or one premerged consensusXML. The pipeline publishes peptide results separately for each plex; cross-plex peptide integration belongs in quantitate-ProteomicProtein.</p>
 <hr />
               
             </div>

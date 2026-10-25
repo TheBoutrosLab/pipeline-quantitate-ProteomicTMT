@@ -86,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Outputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -95,7 +95,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="outputs">Outputs</h2>
-<p>Final results are saved under <code>&lt;output_dir&gt;/quantitate-ProteomicTMT-&lt;version&gt;/&lt;plex_name&gt;/OpenMS-&lt;version&gt;/output/</code>:</p>
+<p>Final results are saved under <code>&lt;output_dir&gt;/quantitate-ProteomicTMT-&lt;version&gt;/OpenMS-&lt;version&gt;/output/&lt;plex_id&gt;/</code>:</p>
 <table>
 <thead>
 <tr>
@@ -105,32 +105,32 @@
 </thead>
 <tbody>
 <tr>
-<td><code>&lt;plex_name&gt;_FileMerger.consensusXML</code></td>
+<td><code>&lt;plex_id&gt;_FileMerger.consensusXML</code></td>
 <td>Merged reporter-ion features, for mzML input.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_name&gt;_IDMapper.consensusXML</code></td>
+<td><code>&lt;plex_id&gt;_IDMapper.consensusXML</code></td>
 <td>Consensus features with peptide identifications mapped to them.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_name&gt;_IDConflictResolver.consensusXML</code></td>
+<td><code>&lt;plex_id&gt;_IDConflictResolver.consensusXML</code></td>
 <td>Consensus features after conflicting identifications are resolved.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_name&gt;_ProteinQuantifier_peptide_fixZeroPlex.csv</code></td>
+<td><code>&lt;plex_id&gt;_ProteinQuantifier_peptide_fixZeroPlex.csv</code></td>
 <td>Final peptide abundances when normalization is enabled.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_name&gt;_ProteinQuantifier_peptide.csv</code></td>
+<td><code>&lt;plex_id&gt;_ProteinQuantifier_peptide.csv</code></td>
 <td>Final peptide abundances when normalization is disabled.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_name&gt;_unmapped.consensusXML</code></td>
+<td><code>&lt;plex_id&gt;_unmapped.consensusXML</code></td>
 <td>Unmapped features, when <code>remove_mapped_consensus = true</code>.</td>
 </tr>
 </tbody>
 </table>
-<p>Intermediate files are published under <code>intermediate/</code> when <code>save_intermediate_files = true</code>. Process logs and Nextflow reports are written under the timestamped <code>log-quantitate-ProteomicTMT-*</code> directory. Three NFTest integration cases are defined in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/nftest.yml">nftest.yml</a>; fixture setup is described in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/test/README.md">test/README.md</a>.</p>
+<p>Intermediate files are published under <code>intermediate/&lt;plex_id&gt;/</code> when <code>save_intermediate_files = true</code>. Process logs and Nextflow reports are written under the timestamped <code>log-quantitate-ProteomicTMT-*</code> directory. Three NFTest integration cases are defined in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/nftest.yml">nftest.yml</a>; fixture setup is described in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/test/README.md">test/README.md</a>.</p>
 <hr />
               
             </div>

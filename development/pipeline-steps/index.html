@@ -86,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Pipeline Steps</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/d572557bc7201748413266e249012bb92e070d4d/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/b7a10287df0874541df1738ea4c0bd07c31dc2e2/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -95,8 +95,8 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="pipeline-steps">Pipeline Steps</h2>
-<p>For mzML input, <code>FileFilter</code> sorts each file, <code>IsobaricAnalyzer</code> extracts reporter ions, and <code>FileMerger</code> appends the consensus features. The pipeline sets the merged column filenames to <code>plex_name</code>. The premerged entry point starts with the supplied consensusXML.</p>
-<p>Normalization is enabled by default. The default <code>tmt_normalization_method = 'openms'</code> uses IsobaricAnalyzer's median-ratio normalization and requires mzML input. Set it to <code>mad</code> to use MSPtools MADNormalizer after merging. MAD normalization can use a physical reference identified by a column description of <code>reference</code>, or a virtual reference computed from reporter intensities. With <code>mad_normalizer_quasi_intensity = true</code> (default), MADNormalizer writes reference-scaled quasi-intensities; set it to <code>false</code> for normalized log2 ratios. NaN reporter handles are retained by default so missing channels keep their positions in the peptide CSV. Set <code>enable_tmt_normalization = false</code> to skip both normalization methods.</p>
+<p>For each mzML plex, <code>FileFilter</code> sorts its files, <code>IsobaricAnalyzer</code> extracts its reporter ions, and <code>FileMerger</code> appends its consensus features. The pipeline sets that plex's merged column filenames to its <code>plex_id</code>. A premerged plex starts with its supplied consensusXML. Plex IDs stay attached to every downstream process, so files from separate plexes do not merge.</p>
+<p>Normalization is enabled by default and uses one method across the run. The default <code>tmt_normalization_method = 'openms'</code> uses IsobaricAnalyzer's median-ratio normalization; all plexes must then use mzML input. Set it to <code>mad</code> to use MSPtools MADNormalizer independently on each plex after merging. MAD normalization can use a physical reference identified by a column description of <code>reference</code>, or a virtual reference computed from reporter intensities. With <code>mad_normalizer_quasi_intensity = true</code> (default), MADNormalizer writes reference-scaled quasi-intensities; set it to <code>false</code> for normalized log2 ratios. NaN reporter handles are retained by default so missing channels keep their positions in the peptide CSV. Set <code>enable_tmt_normalization = false</code> to skip both normalization methods.</p>
 <p>Before <code>IDMapper</code>, the pipeline aligns a temporary idXML copy's run names to the consensusXML column filename. <code>IDConflictResolver</code> resolves mapped peptide assignments, and <code>ProteinQuantifier</code> writes peptide abundances. When normalization is enabled, MSPtools marks all-zero plexes as missing in the final CSV. It also checks unquantified reporter channels against the consensusXML when <code>protein_quantifier_best_charge_and_fraction = true</code>. Set <code>remove_mapped_consensus = true</code> to also publish unmapped features.</p>
 <hr />
               
