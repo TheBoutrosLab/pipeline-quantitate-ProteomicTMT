@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Update the default MSPtools image to v1.0.3, which fixes the `fixZeroPlex` peptide-charge lookup.
+
 ## [1.1.0] - 2026-10-24
 
 ### Changed
