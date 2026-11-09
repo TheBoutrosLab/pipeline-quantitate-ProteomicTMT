@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Outputs - pipeline-quantitate-ProteomicTMT</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Outputs";
+        var mkdocs_page_input_path = "outputs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-quantitate-ProteomicTMT
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-based-tmt-workflow/">Feature-based TMT workflow</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Outputs</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-quantitate-ProteomicTMT</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Outputs</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/v2.0.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="outputs">Outputs</h2>
+<p>Final results are saved under <code>&lt;output_dir&gt;/quantitate-ProteomicTMT-&lt;version&gt;/OpenMS-&lt;version&gt;/output/</code>. Replace <code>${dataset_id}</code> below with the configured dataset identifier:</p>
+<table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Output</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scan-based</td>
+<td><code>${dataset_id}_ScanBased.consensusXML</code></td>
+<td>Merged plex map before peptide-identification conflict resolution.</td>
+</tr>
+<tr>
+<td>Feature-based</td>
+<td><code>${dataset_id}_FeatureBased.consensusXML</code></td>
+<td>Linked feature map before peptide-identification conflict resolution.</td>
+</tr>
+<tr>
+<td>Feature-based</td>
+<td><code>${dataset_id}_LinkedFeatures.tsv</code></td>
+<td>Linked feature/channel rows from all fractions and plexes; includes <code>fraction_id</code>, <code>plex_id</code>, and <code>sample_name</code>.</td>
+</tr>
+<tr>
+<td>Both</td>
+<td><code>${dataset_id}_IDConflictResolver.consensusXML</code></td>
+<td>Dataset map after resolving conflicting identifications.</td>
+</tr>
+<tr>
+<td>Both</td>
+<td><code>${dataset_id}_ProteinQuantifier_peptide.csv</code></td>
+<td>Peptide quantification when normalization is disabled.</td>
+</tr>
+<tr>
+<td>Both with OpenMS normalization or MAD quasi-intensities</td>
+<td><code>${dataset_id}_ProteinQuantifier_peptide_fixZeroPlex.csv</code></td>
+<td>Final peptide quantification after column repair and missing-value cleanup.</td>
+</tr>
+<tr>
+<td>Both with MAD log2 ratios</td>
+<td><code>${dataset_id}_ProteinQuantifier_peptide.csv</code></td>
+<td>Peptide table after column repair; zero ratios remain zero.</td>
+</tr>
+</tbody>
+</table>
+<p>Plex and fraction maps, per-run feature allocation tables, and scan-assignment/QC reports are published under <code>intermediate/</code> only when <code>save_intermediate_files = true</code>. Process logs and Nextflow reports are written under the timestamped <code>log-quantitate-ProteomicTMT-*</code> directory. Four NFTest integration cases are defined in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/nftest.yml">nftest.yml</a>; fixture setup is described in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/test/README.md">test/README.md</a>.</p>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../inputs/" class="btn btn-neutral float-left" title="Inputs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../references/" class="btn btn-neutral float-right" title="References">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/tree/v2.0.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../inputs/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../references/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

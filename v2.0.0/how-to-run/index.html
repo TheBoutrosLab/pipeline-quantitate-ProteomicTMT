@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>How To Run - pipeline-quantitate-ProteomicTMT</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "How To Run";
+        var mkdocs_page_input_path = "how-to-run.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-quantitate-ProteomicTMT
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">How To Run</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-based-tmt-workflow/">Feature-based TMT workflow</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-quantitate-ProteomicTMT</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">How To Run</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/v2.0.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="how-to-run">How To Run</h2>
+<ol>
+<li>
+<p>Create a <code>.config</code> using the <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/config/template.config">template</a>. Set <code>dataset_id</code>, <code>output_dir</code>, <code>idXML_csv</code>, <code>mzML_csv</code>, and <code>channel_csv</code>. For premerged input, set <code>consensusXML_entrypoint = true</code> and use <code>consensusXML_csv</code> in place of <code>mzML_csv</code> and <code>channel_csv</code>. The entry-point flag selects which source CSV is read. Choose a normalization method for the run.</p>
+</li>
+<li>
+<p>Create an <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/mzML.csv">mzML CSV</a> or <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/consensusXML.csv">consensusXML CSV</a>, plus an <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/idXML.csv">idXML CSV</a>. Use one mzML row per fraction or one consensusXML row per plex. Feature-based TMT additionally requires <code>fraction_id</code> in the mzML CSV. For mzML input, supply one <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/channel.csv">channel CSV</a> with rows keyed by plex ID. Use one idXML row per plex.</p>
+</li>
+<li>
+<p>Initialize the Git submodules and run the pipeline with Nextflow, for example:</p>
+</li>
+</ol>
+<p><code>bash
+   export NXF_VER=24.10.6
+   export NXF_SYNTAX_PARSER=v1
+   nextflow run TheBoutrosLab/pipeline-quantitate-ProteomicTMT -r &lt;version&gt; -c config/my-run.config</code></p>
+<p>The configuration defaults to Docker. Use <code>-profile apptainer</code> or <code>-profile singularity</code> where appropriate; the <code>local</code> profile uses installed executables for development. The <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/.env-template"><code>.env-template</code></a> records the Nextflow version used with the shared configuration modules.</p>
+<blockquote>
+<p>:warning: mzML files within one plex must have distinct basenames and distinct native scan IDs wherever they have identifications. A premerged consensusXML must retain its column headers and scan identifiers for ID mapping.</p>
+</blockquote>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pipeline-steps/" class="btn btn-neutral float-right" title="Pipeline Steps">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/tree/v2.0.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pipeline-steps/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
