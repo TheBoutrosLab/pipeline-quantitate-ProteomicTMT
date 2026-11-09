@@ -1,12 +1,4 @@
-include { getOpenMSArgs } from "${moduleDir}/common"
-
-PARAMETERS = []
-
-FLAGS = []
-
-PARAMETER_MAPPER = [:]
-
-FLAG_MAPPER = [:]
+include { getToolArgs } from './common'
 
 process sort_spectra {
     container params.docker_image_openms
@@ -30,12 +22,25 @@ process sort_spectra {
 
     script:
     sorted_mzML = "${plex}_${mzML.baseName}_sorted.mzML"
-    // extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
+    if (params.FileFilter?.containsKey('sort')) {
+        throw new IllegalArgumentException('FileFilter.sort is always enabled.')
+    }
+    def program_options = params.FileFilter ?: [:]
+    def flag_options = [
+        'sort', 'peak_options:sort_peaks', 'peak_options:no_chromatograms',
+        'peak_options:remove_chromatograms', 'peak_options:remove_empty',
+        'peak_options:remove_metadataarrays', 'spectra:remove_zoom',
+        'spectra:select_zoom', 'consensus:map_and', 'f_and_c:remove_hull',
+        'id:remove_clashes', 'id:keep_best_score_id',
+        'id:remove_annotated_features', 'id:remove_unannotated_features',
+        'id:remove_unassigned_ids', 'id:blacklist_imperfect'
+    ] as Set
+    def extra_args = getToolArgs(program_options, flag_options)
     """
     FileFilter \\
         -in ${mzML} \\
         -out ${sorted_mzML} \\
         -threads ${task.cpus} \\
-        -sort
+        -sort ${extra_args}
     """
 }

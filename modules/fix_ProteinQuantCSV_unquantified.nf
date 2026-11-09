@@ -1,20 +1,5 @@
 // Module: Clean missing peptide values after scan-based normalization.
-include { getOpenMSArgs } from "${moduleDir}/common"
-
-PARAMETERS = [
-
-]
-
-FLAGS = [
-
-]
-
-PARAMETER_MAPPER = [
-    'protein_quantifier_format_separator': '--separator',
-    'protein_quantifier_format_quoting': '--quoting'
-]
-
-FLAG_MAPPER = [:]
+include { getToolArgs } from './common'
 
 /**
  * Input: the dataset peptide CSV and resolved consensusXML. Output: one CSV with all-
@@ -26,7 +11,7 @@ process fix_ProteinQuantCSV_unquantified {
     publishDir "${params.final_output_dir}",
         mode: 'copy',
         pattern: "*_fixZeroPlex.csv",
-        enabled: params.enable_tmt_normalization && (params.tmt_normalization_method == 'openms' || params.mad_normalizer_quasi_intensity)
+        enabled: params.enable_tmt_normalization && (params.tmt_normalization_method == 'openms' || params.MADNormalizer.quasi_intensity)
 
     publishDir "${params.process_log_dir}/${task.process.replace(':', '/')}-${task.index}/",
         mode: 'copy',
@@ -43,10 +28,12 @@ process fix_ProteinQuantCSV_unquantified {
 
     script:
     output_csv = "${params.dataset_id}_ProteinQuantifier_peptide_fixZeroPlex.csv"
-    extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
+    def program_options = params.fixZeroPlex ?: [:]
+    def flag_options = ['greedy_group_resolution', 'nocheck_intensity'] as Set
+    def extra_args = getToolArgs(program_options, flag_options, '--')
     // Charge-aggregated peptide rows use charge 0; the consensusXML lookup
     // expects the individual charge reported with -best_charge_and_fraction.
-    consensus_arg = params.protein_quantifier_best_charge_and_fraction ? "--consensusXML ${consensusXML}" : ""
+    consensus_arg = params.ProteinQuantifier.best_charge_and_fraction ? "--consensusXML ${consensusXML}" : ""
     """
     msptools ProteinQuantCSV fixZeroPlex \\
         --input-path ${input_csv} \\

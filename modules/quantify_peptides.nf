@@ -1,19 +1,5 @@
 // Module: Quantify peptides from the final dataset consensusXML.
-include { getOpenMSArgs } from "${moduleDir}/common"
-
-PARAMETERS = []
-
-FLAGS = []
-
-PARAMETER_MAPPER = [
-    'protein_quantifier_format_separator': '-format:separator',
-    'protein_quantifier_format_quoting': '-format:quoting',
-    'protein_quantifier_format_replacement': '-format:replacement'
-]
-
-FLAG_MAPPER = [
-    'protein_quantifier_best_charge_and_fraction': '-best_charge_and_fraction'
-]
+include { getToolArgs } from './common'
 
 /**
  * Input: one conflict-resolved consensusXML. Output: one OpenMS ProteinQuantifier
@@ -25,7 +11,7 @@ process quantify_peptides {
     publishDir "${params.final_output_dir}",
         mode: 'copy',
         pattern: "*.csv",
-        enabled: (!params.enable_tmt_normalization || (params.tmt_normalization_method == 'mad' && !params.mad_normalizer_quasi_intensity)) && !params.protein_quantifier_best_charge_and_fraction
+        enabled: (!params.enable_tmt_normalization || (params.tmt_normalization_method == 'mad' && !params.MADNormalizer.quasi_intensity)) && !params.ProteinQuantifier.best_charge_and_fraction
 
     publishDir "${params.intermediate_file_dir}/${params.dataset_id}/${task.process.replace(':','/')}",
         enabled: params.save_intermediate_files,
@@ -46,7 +32,10 @@ process quantify_peptides {
 
     script:
     peptide_out = "${params.dataset_id}_ProteinQuantifier_peptide.csv"
-    extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
+    def program_options = params.ProteinQuantifier ?: [:]
+    def flag_options = ['best_charge_and_fraction', 'top:include_all',
+        'consensus:normalize', 'consensus:fix_peptides', 'ratios', 'ratiosSILAC'] as Set
+    def extra_args = getToolArgs(program_options, flag_options)
     """
     ProteinQuantifier \\
         -in ${consensusXML} \\

@@ -13,6 +13,7 @@
 
 ### Changed
 
+- Group tool settings under nested program-name namespaces and build command options from set values without module-level parameter maps.
 - Link feature-based plexes using matching peptide identifications and configurable RT and 10-ppm m/z tolerances.
 - Keep OpenMS reporter normalization off for feature-based TMT and support MSPtools MAD normalization on the merged linked map.
 - Use the required `dataset_id` for final filenames and remove the hard-coded cohort grouping key.

@@ -104,7 +104,7 @@ workflow quantify_TMT_FeatureBased {
         resolve_conflict(consensus_for_quantification)
         merge_TMTFeatureTables(resolve_conflict.out[0], all_fraction_tables)
         quantify_peptides(resolve_conflict.out[0])
-        if (params.protein_quantifier_best_charge_and_fraction) {
+        if (params.ProteinQuantifier.best_charge_and_fraction) {
             // OpenMS 3.5 can omit fields for plexes where a peptide is absent.
             repair_ProteinQuantCSV_columns(quantify_peptides.out[0], resolve_conflict.out[0])
             peptide_for_cleanup = repair_ProteinQuantCSV_columns.out[0]
@@ -113,7 +113,7 @@ workflow quantify_TMT_FeatureBased {
         }
         // MAD log2 ratios use zero for equality to the reference, so zero-plex
         // cleanup applies only to intensity-scale outputs.
-        if (params.enable_tmt_normalization && (params.tmt_normalization_method == 'openms' || params.mad_normalizer_quasi_intensity)) {
+        if (params.enable_tmt_normalization && (params.tmt_normalization_method == 'openms' || params.MADNormalizer.quasi_intensity)) {
             fix_ProteinQuantCSV_unquantified(peptide_for_cleanup, resolve_conflict.out[0])
             final_peptide_tables = fix_ProteinQuantCSV_unquantified.out[0]
         } else {

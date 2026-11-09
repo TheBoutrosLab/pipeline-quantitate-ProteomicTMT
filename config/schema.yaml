@@ -30,18 +30,50 @@ tmt_workflow:
   type: String
   required: false
   help: Select scan_based (reporter-ion peptide quantification) or feature_based (MS1 feature-based TMT quantification).
-feature_linker_use_identifications:
-  type: Bool
+FeatureFinderIdentification:
+  type: Namespace
   required: false
-  help: Require matching best peptide identifications when both linked features have IDs.
-feature_linker_rt_tolerance:
-  type: Number
+  help: FeatureFinderIdentification options for the feature-based workflow.
+MapAlignerIdentification:
+  type: Namespace
   required: false
-  help: Maximum aligned MS1 feature RT difference in seconds for cross-plex linking.
-feature_linker_mz_tolerance_ppm:
-  type: Number
+  help: MapAlignerIdentification options for the feature-based workflow.
+FeatureLinkerUnlabeledQT:
+  type: Namespace
   required: false
-  help: Maximum MS1 feature m/z difference in ppm for cross-plex linking.
+  help: FeatureLinkerUnlabeledQT options for the feature-based workflow.
+IsobaricAnalyzer:
+  type: Namespace
+  required: false
+  help: IsobaricAnalyzer options, including extraction and quantification.
+FileMerger:
+  type: Namespace
+  required: false
+  help: Optional FileMerger command options; append_method is pipeline-managed.
+FileFilter:
+  type: Namespace
+  required: false
+  help: Optional FileFilter command options; sort is pipeline-managed.
+IDMapper:
+  type: Namespace
+  required: false
+  help: IDMapper options, including feature and consensus options.
+ProteinQuantifier:
+  type: Namespace
+  required: false
+  help: ProteinQuantifier options.
+IDConflictResolver:
+  type: Namespace
+  required: false
+  help: IDConflictResolver options.
+MADNormalizer:
+  type: Namespace
+  required: false
+  help: MSPtools MADNormalizer options; underscores become CLI hyphens.
+fixZeroPlex:
+  type: Namespace
+  required: false
+  help: MSPtools fixZeroPlex options; underscores become CLI hyphens.
 consensusXML_entrypoint:
   type: Bool
   required: false
@@ -51,30 +83,10 @@ idXML_csv:
   mode: r
   required: true
   help: One matching idXML file per plex.
-protein_quantifier_best_charge_and_fraction:
-  type: Bool
-  required: false
-  help: Report peptide abundance separately by fraction and charge state.
 tmt_normalization_method:
   type: String
   required: false
   help: Normalization method, either mad or openms.
-virtual_reference_min_channels:
-  type: Integer
-  required: false
-  help: Minimum number of finite channels above min_int for each feature and plex virtual reference.
-mad_normalizer_quasi_intensity:
-  type: Bool
-  required: false
-  help: Write MAD-normalized reference-scaled quasi-intensities instead of log2 ratios.
-mad_normalizer_bridge_scale:
-  type: Bool
-  required: false
-  help: Align feature-based plexes by the median of all valid reference areas.
-mad_normalizer_allow_virtual_bridge:
-  type: Bool
-  required: false
-  help: Explicitly allow bridge scaling with virtual references and comparable sample composition.
 filter_na_consensus_handles:
   type: Bool
   required: false

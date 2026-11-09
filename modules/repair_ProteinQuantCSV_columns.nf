@@ -14,7 +14,7 @@ process repair_ProteinQuantCSV_columns {
 
     publishDir "${params.final_output_dir}",
         mode: 'copy',
-        enabled: (!params.enable_tmt_normalization || (params.tmt_normalization_method == 'mad' && !params.mad_normalizer_quasi_intensity)),
+        enabled: (!params.enable_tmt_normalization || (params.tmt_normalization_method == 'mad' && !params.MADNormalizer.quasi_intensity)),
         pattern: '*_repaired.csv',
         saveAs: { "${params.dataset_id}_ProteinQuantifier_peptide.csv" }
 

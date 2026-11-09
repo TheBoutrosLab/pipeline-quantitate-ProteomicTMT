@@ -1,15 +1,5 @@
 // Module: Resolve peptide-identification conflicts in the final dataset consensusXML.
-include { getOpenMSArgs } from "${moduleDir}/common"
-
-PARAMETERS = []
-
-FLAGS = []
-
-PARAMETER_MAPPER = [
-    'conflict_resolver_resolve_between_features': '-resolve_between_features'
-]
-
-FLAG_MAPPER = [:]
+include { getToolArgs } from './common'
 
 /**
  * Input: one merged consensusXML. Output: one conflict-resolved consensusXML for
@@ -36,7 +26,9 @@ process resolve_conflict {
 
     script:
     output_file = "${params.dataset_id}_IDConflictResolver.consensusXML"
-    extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
+    def program_options = params.IDConflictResolver ?: [:]
+    def flag_options = [] as Set
+    def extra_args = getToolArgs(program_options, flag_options)
     """
     IDConflictResolver \\
         -in ${consensusXML} \\

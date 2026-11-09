@@ -1,25 +1,4 @@
-include { getOpenMSArgs } from "${moduleDir}/common"
-
-PARAMETERS = [
-
-]
-
-FLAGS = [
-
-]
-
-PARAMETER_MAPPER = [
-    'min_int': '--min-int',
-    'virtual_reference_method': '--virtual-reference-method',
-    'virtual_reference_min_channels': '--virtual-reference-min-channels'
-]
-
-FLAG_MAPPER = [
-    'virtual_reference': '--virtual-reference',
-    'mad_normalizer_quasi_intensity': '--quasi-intensity',
-    'mad_normalizer_bridge_scale': '--bridge-scale',
-    'mad_normalizer_allow_virtual_bridge': '--allow-virtual-bridge'
-]
+include { getToolArgs } from './common'
 
 process normalize_consensusXML_MAD {
     container params.docker_image_msptools
@@ -49,7 +28,9 @@ process normalize_consensusXML_MAD {
     output_consensus = "${params.dataset_id}_MADNormalizer.consensusXML"
     scaling_report = "${params.dataset_id}_MADNormalizer_scaling.tsv"
     layout = params.tmt_workflow == 'feature_based' ? 'linked' : 'scan'
-    extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
+    def program_options = params.MADNormalizer ?: [:]
+    def flag_options = ['virtual_reference', 'quasi_intensity', 'bridge_scale', 'allow_virtual_bridge'] as Set
+    def extra_args = getToolArgs(program_options, flag_options, '--')
     """
     msptools ConsensusXML MADNormalizer \\
         --input-path ${input_consensus} \\

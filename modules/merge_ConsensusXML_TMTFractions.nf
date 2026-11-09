@@ -10,10 +10,10 @@ process merge_ConsensusXML_TMTFractions {
     publishDir "${params.final_output_dir}", mode: 'copy', pattern: '*.consensusXML'
 
     input:
-    path(maps)
+        path(maps)
 
     output:
-    path("${params.dataset_id}_FeatureBased.consensusXML")
+        path("${params.dataset_id}_FeatureBased.consensusXML")
 
     script:
     def inputs = maps instanceof List ? maps : [maps]

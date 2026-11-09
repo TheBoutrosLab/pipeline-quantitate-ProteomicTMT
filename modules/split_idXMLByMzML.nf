@@ -6,12 +6,18 @@
 process split_idXMLByMzML {
     container params.docker_image_pyopenms
     containerOptions params.project_script_mount_options
+
     input:
-    tuple val(run_key), path(mzml), path(idxml)
+        tuple val(run_key), path(mzml), path(idxml)
+
     output:
-    tuple val(run_key), path(mzml), path("${run_key}.idXML")
+        tuple val(run_key), path(mzml), path("${run_key}.idXML")
+
     script:
     """
-    python ${projectDir}/src/SplitTMTIdXMLByRun.py --input-idxml ${idxml} --mzml ${mzml} --output-idxml ${run_key}.idXML
+    python ${projectDir}/src/SplitTMTIdXMLByRun.py \\
+        --input-idxml ${idxml} \\
+        --mzml ${mzml} \\
+        --output-idxml ${run_key}.idXML
     """
 }
