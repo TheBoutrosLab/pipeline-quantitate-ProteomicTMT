@@ -60,13 +60,13 @@ link_TMTFeatures
    * - Config key
      - Command option
      - Kind
-   * - ``link_tmt_features_use_identifications``
+   * - ``feature_linker_use_identifications``
      - ``-algorithm:use_identifications``
      - value
-   * - ``link_tmt_features_rt_tolerance``
+   * - ``feature_linker_rt_tolerance``
      - ``-algorithm:distance_RT:max_difference`` (seconds)
      - value
-   * - ``link_tmt_features_mz_tolerance_ppm``
+   * - ``feature_linker_mz_tolerance_ppm``
      - ``-algorithm:distance_MZ:max_difference`` with ``-algorithm:distance_MZ:unit ppm``
      - value
 

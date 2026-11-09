@@ -30,15 +30,15 @@ tmt_workflow:
   type: String
   required: false
   help: Select scan_based (reporter-ion peptide quantification) or feature_based (MS1 feature-based TMT quantification).
-link_tmt_features_use_identifications:
+feature_linker_use_identifications:
   type: Bool
   required: false
   help: Require matching best peptide identifications when both linked features have IDs.
-link_tmt_features_rt_tolerance:
+feature_linker_rt_tolerance:
   type: Number
   required: false
   help: Maximum aligned MS1 feature RT difference in seconds for cross-plex linking.
-link_tmt_features_mz_tolerance_ppm:
+feature_linker_mz_tolerance_ppm:
   type: Number
   required: false
   help: Maximum MS1 feature m/z difference in ppm for cross-plex linking.
