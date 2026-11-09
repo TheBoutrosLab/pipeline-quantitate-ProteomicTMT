@@ -13,7 +13,7 @@
 
 ### Changed
 
-- Link feature-based plexes using matching peptide identifications and configurable 60-second RT and 10-ppm m/z tolerances.
+- Link feature-based plexes using matching peptide identifications and configurable RT and 10-ppm m/z tolerances.
 - Keep OpenMS reporter normalization off for feature-based TMT and support MSPtools MAD normalization on the merged linked map.
 - Use the required `dataset_id` for final filenames and remove the hard-coded cohort grouping key.
 - Pass files directly through final conflict resolution, peptide quantification, and CSV cleanup; keep peptide output as CSV.
