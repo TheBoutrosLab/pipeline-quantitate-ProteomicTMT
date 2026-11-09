@@ -15,8 +15,9 @@ FLAG_MAPPER = [:]
 process merge_consensusXML {
     container params.docker_image_openms
 
-    publishDir "${params.final_output_dir}/${plex}",
+    publishDir "${params.intermediate_file_dir}/${plex}/${task.process.replace(':', '/')}",
         mode: 'copy',
+        enabled: params.save_intermediate_files,
         pattern: "*.consensusXML"
 
     publishDir "${params.process_log_dir}/${task.process.replace(':', '/')}-${task.index}/",

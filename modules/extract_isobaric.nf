@@ -1,4 +1,4 @@
-include { getOpenMSArgs } from "${moduleDir}/common"
+include { getOpenMSArgs } from './common'
 
 PARAMETERS = [
 
@@ -56,7 +56,7 @@ process extract_isobaric {
     if (reference) {
         extra_args += " -${plex_type}:reference_channel ${reference}"
     }
-    if (params.enable_tmt_normalization && params.tmt_normalization_method == 'openms') {
+    if (params.tmt_workflow != 'feature_based' && params.enable_tmt_normalization && params.tmt_normalization_method == 'openms') {
         extra_args += " -quantification:normalization"
     }
     extra_args += ""

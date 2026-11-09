@@ -26,3 +26,10 @@ cases:
     nf_config: test/test_integration_mergedConsensusXML/test.config
     skip: false
     verbose: true
+
+  - name: test-integration-FeatureBasedTMT
+    message: Integration test of cross-plex MS1 feature-based TMT channel-area estimation
+    nf_script: main.nf
+    nf_config: test/test_integration_FeatureBasedTMT/test.config
+    skip: false
+    verbose: true

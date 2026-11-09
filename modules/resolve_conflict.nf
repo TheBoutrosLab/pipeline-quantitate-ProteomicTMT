@@ -1,3 +1,4 @@
+// Module: Resolve peptide-identification conflicts in the final dataset consensusXML.
 include { getOpenMSArgs } from "${moduleDir}/common"
 
 PARAMETERS = []
@@ -10,10 +11,14 @@ PARAMETER_MAPPER = [
 
 FLAG_MAPPER = [:]
 
+/**
+ * Input: one merged consensusXML. Output: one conflict-resolved consensusXML for
+ * peptide quantification.
+ */
 process resolve_conflict {
     container params.docker_image_openms
 
-    publishDir "${params.final_output_dir}/${plex}",
+    publishDir "${params.final_output_dir}",
         mode: 'copy',
         pattern: "*.consensusXML"
 
@@ -23,14 +28,14 @@ process resolve_conflict {
         saveAs: { "log${file(it).name}" }
 
     input:
-        tuple val(plex), path(consensusXML)
+        path(consensusXML)
 
     output:
-        tuple val(plex), path(output_file)
+        path(output_file)
         file ".command.*"
 
     script:
-    output_file = "${plex}_IDConflictResolver.consensusXML"
+    output_file = "${params.dataset_id}_IDConflictResolver.consensusXML"
     extra_args = getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
     """
     IDConflictResolver \\

@@ -118,12 +118,24 @@ normalize_consensusXML_MAD
    * - ``virtual_reference_method``
      - ``--virtual-reference-method``
      - value
+   * - ``virtual_reference_min_channels``
+     - ``--virtual-reference-min-channels``
+     - value
    * - ``virtual_reference``
      - ``--virtual-reference``
      - flag
    * - ``mad_normalizer_quasi_intensity``
      - ``--quasi-intensity``
      - flag
+   * - ``mad_normalizer_bridge_scale``
+     - ``--bridge-scale``
+     - flag
+   * - ``mad_normalizer_allow_virtual_bridge``
+     - ``--allow-virtual-bridge``
+     - flag
+
+``--layout`` is set from ``tmt_workflow`` (``scan`` or ``linked``), and a
+per-plex scaling report is written for every MAD run.
 
 
 quantify_peptides

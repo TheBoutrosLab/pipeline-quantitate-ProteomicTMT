@@ -3,6 +3,10 @@ output_dir:
   mode: w
   required: true
   help: Root output directory.
+dataset_id:
+  type: String
+  required: true
+  help: Dataset identifier used in final filenames; letters, digits, dots, underscores, and hyphens only.
 mzML_csv:
   type: Path
   mode: r
@@ -22,6 +26,10 @@ consensusXML_csv:
   mode: r
   required: false
   help: One premerged consensusXML file per TMT plex.
+tmt_workflow:
+  type: String
+  required: false
+  help: Select scan_based (reporter-ion peptide quantification) or feature_based (MS1 feature-based TMT quantification).
 consensusXML_entrypoint:
   type: Bool
   required: false
@@ -39,10 +47,22 @@ tmt_normalization_method:
   type: String
   required: false
   help: Normalization method, either mad or openms.
+virtual_reference_min_channels:
+  type: Integer
+  required: false
+  help: Minimum number of finite channels above min_int for each feature and plex virtual reference.
 mad_normalizer_quasi_intensity:
   type: Bool
   required: false
   help: Write MAD-normalized reference-scaled quasi-intensities instead of log2 ratios.
+mad_normalizer_bridge_scale:
+  type: Bool
+  required: false
+  help: Align feature-based plexes by the median of all valid reference areas.
+mad_normalizer_allow_virtual_bridge:
+  type: Bool
+  required: false
+  help: Explicitly allow bridge scaling with virtual references and comparable sample composition.
 filter_na_consensus_handles:
   type: Bool
   required: false
