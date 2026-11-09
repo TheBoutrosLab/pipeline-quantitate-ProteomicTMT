@@ -66,8 +66,10 @@ def main():
             plex_values[plex_id] = identity
             sample_name = (text(header.getMetaValue('channel_description'))
                            if header.metaValueExists('channel_description') else '')
-            output.append((feature.getUniqueId(), args.fraction_id, row['plex_id'], row['channel_label'],
-                           sample_name, channel.getMapIndex(), row['source_feature_id'], row['ms1_area'],
+            output.append((feature.getUniqueId(), args.fraction_id,
+                           row['plex_id'], row['channel_label'], sample_name,
+                           channel.getMapIndex(), row['source_feature_id'],
+                           row['ms1_area'],
                            row['reporter_sum_channel'], row['reporter_sum_total'],
                            row['estimated_channel_area'], row['scan_count'], key))
         for plex_id, (source_id, area, reporter_sum, scan_count) in plex_values.items():

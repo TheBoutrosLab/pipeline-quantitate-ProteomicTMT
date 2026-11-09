@@ -52,7 +52,8 @@ def main():
                 scale_key = f'plex_scale_factor::{plex}'
                 if not feature.metaValueExists(scale_key):
                     raise ValueError(f'Normalized feature {final_id} lacks {scale_key}')
-                normalized_handles[(final_id, index)] = (handle.getUniqueId(), handle.getIntensity())
+                normalized_handles[(final_id, index)] = (
+                    handle.getUniqueId(), handle.getIntensity())
                 scale_factors[(final_id, index)] = float(feature.getMetaValue(scale_key))
 
     fieldnames = None
@@ -88,12 +89,14 @@ def main():
                     header = headers[index]
                     if (text(header.filename) != row['plex_id'] or
                             text(header.label) != row['channel_label']):
-                        raise ValueError(f'{path}: normalized channel header mismatch: {handle_key}')
+                        raise ValueError(
+                            f'{path}: normalized channel header mismatch: {handle_key}')
                     row['normalized_channel_area'] = area
                     row['plex_scale_factor'] = scale_factors[handle_key]
                 key = (fraction, row['linked_feature_id'], row['plex_id'], row['channel_label'])
                 if not all(key) or key in seen:
-                    raise ValueError(f'{path}: empty or duplicate linked feature/channel key: {key}')
+                    raise ValueError(
+                        f'{path}: empty or duplicate linked feature/channel key: {key}')
                 seen.add(key)
                 file_fractions.add(fraction)
                 rows.append(row)
