@@ -1,18 +1,8 @@
 nextflow.enable.dsl = 2
 
 include { printPrelogue } from "${projectDir}/modules/common"
-include { sort_spectra } from "${projectDir}/modules/sort_spectra"
-include { extract_isobaric } from "${projectDir}/modules/extract_isobaric"
-include { merge_consensusXML } from "${projectDir}/modules/merge_consensusXML"
-include { set_ConsensusXMLFilename } from "${projectDir}/modules/set_ConsensusXMLFilename"
-include { align_idXMLRunName } from "${projectDir}/modules/align_idXMLRunName"
-include { map_idXML2consensusXML } from "${projectDir}/modules/map_idXML2consensusXML"
-include { remove_ConsensusMappedFeatures } from "${projectDir}/modules/remove_ConsensusMappedFeatures"
-include { resolve_conflict } from "${projectDir}/modules/resolve_conflict"
-include { quantify_peptides } from "${projectDir}/modules/quantify_peptides"
-include { normalize_consensusXML_MAD } from "${projectDir}/modules/normalize_consensusXML_MAD"
-include { filter_consensusXML_naFeatures } from "${projectDir}/modules/filter_consensusXML_naFeatures"
-include { fix_ProteinQuantCSV_unquantified } from "${projectDir}/modules/fix_ProteinQuantCSV_unquantified"
+include { quantify_TMT_ScanBased } from "${projectDir}/modules/quantify_TMT_ScanBased"
+include { quantify_TMT_FeatureBased } from "${projectDir}/modules/quantify_TMT_FeatureBased"
 
 def checked_plex_id(Object value) {
     def plex = value?.trim()
@@ -79,6 +69,21 @@ def prepare_mzml_plexes(List mzml_rows, List id_rows, List channel_rows) {
         def plex = checked_plex_id(row.plex_id)
         if (!row.mzML?.trim()) error "Plex ${plex}: mzML path is required."
     }
+    if (params.tmt_workflow == 'feature_based') {
+        mzml_rows.each { row ->
+            if (!row.containsKey('fraction_id') || !(row.fraction_id?.trim() ==~ /[A-Za-z0-9_.-]+/)) {
+                error "Feature-based TMT requires a valid fraction_id for every mzML row."
+            }
+        }
+        def fractions = mzml_rows.groupBy { it.plex_id.trim() }.collectEntries { plex, rows ->
+            def names = rows.collect { it.fraction_id.trim() }
+            if (names.toSet().size() != names.size()) error "Plex ${plex}: duplicate fraction_id."
+            [(plex): names.toSet()]
+        }
+        if (fractions.values().toSet().size() != 1) {
+            error "Feature-based TMT requires the same fraction_id set in every plex: ${fractions}."
+        }
+    }
     def rows_by_plex = mzml_rows.groupBy { it.plex_id.trim() }
     def ids = match_idxml_rows(id_rows, rows_by_plex.keySet())
     if (!channel_rows) error 'The channel CSV has no reporter channels.'
@@ -121,13 +126,13 @@ def prepare_mzml_plexes(List mzml_rows, List id_rows, List channel_rows) {
         // OpenMS always normalizes to a physical channel; MAD requires one
         // unless it computes a virtual reference.
         def needs_reference = params.enable_tmt_normalization &&
-            (params.tmt_normalization_method == 'openms' || !params.virtual_reference)
+            (params.tmt_normalization_method == 'openms' || !params.MADNormalizer.virtual_reference)
         if (needs_reference && !reference) {
             error "Plex ${plex}: label one channel 'reference' for ${params.tmt_normalization_method} normalization."
         }
-        tuple(plex, sources, file(ids[plex], checkIfExists: true), channels,
-              params.plex_type, reference,
-              first.correction_matrix?.trim() ?: '')
+        def common = [plex, sources, file(ids[plex], checkIfExists: true), channels,
+                      params.plex_type, reference, first.correction_matrix?.trim() ?: '']
+        params.tmt_workflow == 'feature_based' ? tuple(*(common + [rows.collect { it.fraction_id.trim() }])) : tuple(*common)
     }
 }
 
@@ -154,12 +159,7 @@ workflow {
                     error exception.cause?.message ?: exception.message
                 }
             }
-        merged_consensusXML = consensus_plexes.map { plex, consensus, id_file ->
-            tuple(plex, consensus)
-        }
-        plex_ids = consensus_plexes.map { plex, consensus, id_file ->
-            tuple(plex, id_file)
-        }
+        quantify_TMT_ScanBased(consensus_plexes)
     } else {
         // Join complete manifests, then emit independent plex tuples for parallel work.
         mzml_rows_ch = Channel.fromPath(params.mzML_csv).splitCsv(header: true)
@@ -174,54 +174,10 @@ workflow {
                     error exception.cause?.message ?: exception.message
                 }
             }
-        plex_ids = mzml_plexes.map { plex, sources, id_file, channels,
-                                      plex_type, reference, correction -> tuple(plex, id_file) }
-        mzml_inputs = mzml_plexes.flatMap { plex, sources, id_file, channels,
-                                             plex_type, reference, correction ->
-            // Extraction runs per mzML. Carry its manifest position through the
-            // parallel tasks so their completion order cannot reorder fractions.
-            sources.withIndex().collect { source, order ->
-                tuple(plex, order, source, channels, plex_type, reference, correction)
-            }
-        }
-        sort_spectra(mzml_inputs)
-        extract_isobaric(sort_spectra.out[0])
-        // groupTuple() gathers only files with the same plex key; restore CSV order.
-        merge_consensusXML(extract_isobaric.out[0].groupTuple().map { plex, orders, files ->
-            def sorted = new ArrayList(0..<orders.size()).sort { a, b -> orders[a] <=> orders[b] }
-            tuple(plex, sorted.collect { files[it] })
-        })
-        set_ConsensusXMLFilename(merge_consensusXML.out[0])
-        merged_consensusXML = set_ConsensusXMLFilename.out[0]
-    }
-
-    // Both entry points now provide (plex_id, consensusXML) tuples to the same
-    // normalization, identification, and quantification path.
-    if (params.enable_tmt_normalization && params.tmt_normalization_method == 'mad') {
-        normalize_consensusXML_MAD(merged_consensusXML)
-        // Removing NaN handles can shift ProteinQuantifier values under later CSV headers.
-        if (params.filter_na_consensus_handles) {
-            filter_consensusXML_naFeatures(normalize_consensusXML_MAD.out[0])
-            consensus_for_mapping = filter_consensusXML_naFeatures.out[0]
+        if (params.tmt_workflow == 'feature_based') {
+            quantify_TMT_FeatureBased(mzml_plexes)
         } else {
-            consensus_for_mapping = normalize_consensusXML_MAD.out[0]
+            quantify_TMT_ScanBased(mzml_plexes)
         }
-    } else {
-        consensus_for_mapping = merged_consensusXML
-    }
-
-    // Match by plex_id, then align the idXML run name with the consensus map so
-    // IDMapper can associate spectrum references with quantified features.
-    align_idXMLRunName(consensus_for_mapping.join(plex_ids))
-    map_idXML2consensusXML(consensus_for_mapping.join(align_idXMLRunName.out[0]))
-
-    if (params.remove_mapped_consensus) {
-        remove_ConsensusMappedFeatures(map_idXML2consensusXML.out[0])
-    }
-
-    resolve_conflict(map_idXML2consensusXML.out[0])
-    quantify_peptides(resolve_conflict.out[0])
-    if (params.enable_tmt_normalization) {
-        fix_ProteinQuantCSV_unquantified(quantify_peptides.out[0].join(resolve_conflict.out[0]))
     }
 }

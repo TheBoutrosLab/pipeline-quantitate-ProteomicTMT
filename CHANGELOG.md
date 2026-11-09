@@ -1,10 +1,29 @@
 # Changelog
 
-## [Unreleased]
+## [Unreleased] - 2026-11-08
+
+### Added
+
+- Add a schematic showing the shared TMT inputs and outputs, separate scan and feature paths, and common peptide quantification steps.
+- Separate `scan_based` and `feature_based` workflows, selected with `tmt_workflow`; add an optional MS1 feature-based TMT workflow with per-run idXML selection, FFId feature detection, fraction-matched RT alignment, reporter-scan assignment, MS1-scale channel-area estimation, and cross-plex feature linking.
+- Add a feature-based NFTest case using the D’Angelo fixture subset.
+- Preserve each plex's MS1 area and per-channel reporter sums across feature linking in the final consensusXML metadata and a linked feature table.
+- Produce one conflict-resolved dataset consensusXML and peptide CSV from either workflow; merge scan-based plexes as columns and feature-based fractions as rows.
+- Combine linked feature/channel TSVs across all fractions and plexes.
 
 ### Changed
 
-- Update the default MSPtools image to v1.0.3, which fixes the `fixZeroPlex` peptide-charge lookup.
+- Group tool settings under nested program-name namespaces and build command options from set values without module-level parameter maps.
+- Link feature-based plexes using matching peptide identifications and configurable RT and 10-ppm m/z tolerances.
+- Keep OpenMS reporter normalization off for feature-based TMT and support MSPtools MAD normalization on the merged linked map.
+- Use the required `dataset_id` for final filenames and remove the hard-coded cohort grouping key.
+- Pass files directly through final conflict resolution, peptide quantification, and CSV cleanup; keep peptide output as CSV.
+- Publish pre-resolution dataset consensusXMLs for inspection; keep plex-specific and fraction-specific maps and feature allocation diagnostics under optional intermediate output.
+- Update the default MSPtools image to v1.1.1 and normalize merged scan or linked maps before peptide quantification.
+- Expose the MSPtools 1.1.1 virtual-reference minimum channel count, defaulting to one valid channel per feature and plex.
+- Skip all-zero-plex cleanup for MAD log2 ratios, where zero means equality to the reference.
+- Repair OpenMS 3.5 detailed peptide CSV rows that omit abundance fields for absent plexes, using the resolved consensusXML to place values before MSPtools cleanup.
+- Make feature-based bridge scaling optional; compute factors from all valid reference areas per plex, without requiring shared features, and retain raw estimated areas alongside normalized areas and plex factors in the linked table. The D’Angelo feature-based test exercises median virtual-reference bridge scaling.
 
 ## [1.1.0] - 2026-10-24
 

@@ -1,28 +1,4 @@
-include { getOpenMSArgs } from "${moduleDir}/common"
-
-PARAMETERS = [
-
-]
-
-FLAGS = [
-
-]
-
-PARAMETER_MAPPER = [
-    'isobaric_analyzer_extraction_select_activation': '-extraction:select_activation',
-    'isobaric_analyzer_extraction_reporter_mass_shift': '-extraction:reporter_mass_shift',
-    'isobaric_analyzer_extraction_min_precursor_intensity': '-extraction:min_precursor_intensity',
-    'isobaric_analyzer_extraction_min_reporter_intensity': '-extraction:min_reporter_intensity',
-    'isobaric_analyzer_extraction_min_precursor_purity': '-extraction:min_precursor_purity',
-    'isobaric_analyzer_extraction_precursor_isotope_deviation': '-extraction:precursor_isotope_deviation',
-    'isobaric_analyzer_extraction_keep_unannotated_precursor': '-extraction:keep_unannotated_precursor',
-    'isobaric_analyzer_quantification_isotope_correction': '-quantification:isotope_correction'
-]
-
-FLAG_MAPPER = [
-    'isobaric_analyzer_extraction_purity_interpolation': '-extraction:purity_interpolation',
-    'isobaric_analyzer_extraction_discard_low_intensity_quantifications': '-extraction:discard_low_intensity_quantifications'
-]
+include { getToolArgs } from './common'
 
 process extract_isobaric {
     container params.docker_image_openms
@@ -46,8 +22,16 @@ process extract_isobaric {
 
     script:
     consensusXML = "${mzML.baseName}.consensusXML"
-    extra_args = " -type ${plex_type}" + getOpenMSArgs(PARAMETERS, FLAGS, PARAMETER_MAPPER, FLAG_MAPPER)
-    for (chn in channels) {
+    if (params.IsobaricAnalyzer?.quantification?.containsKey('normalization')) {
+        throw new IllegalArgumentException('IsobaricAnalyzer.quantification.normalization is selected by tmt_normalization_method.')
+    }
+    def program_options = params.IsobaricAnalyzer ?: [:]
+    // OpenMS treats only false-by-default boolean subsections as CLI flags.
+    // purity_interpolation defaults to true and requires an explicit value.
+    def flag_options = ['extraction:discard_low_intensity_quantifications'] as Set
+    def extra_args = getToolArgs(program_options, flag_options)
+    extra_args += " -type ${plex_type}"
+    channels.each { chn ->
         extra_args += " -${plex_type}:channel_${chn[0]}_description ${chn[1]}"
     }
     if (correction) {
@@ -56,10 +40,9 @@ process extract_isobaric {
     if (reference) {
         extra_args += " -${plex_type}:reference_channel ${reference}"
     }
-    if (params.enable_tmt_normalization && params.tmt_normalization_method == 'openms') {
+    if (params.tmt_workflow != 'feature_based' && params.enable_tmt_normalization && params.tmt_normalization_method == 'openms') {
         extra_args += " -quantification:normalization"
     }
-    extra_args += ""
     """
     IsobaricAnalyzer \\
         -in ${mzML} \\

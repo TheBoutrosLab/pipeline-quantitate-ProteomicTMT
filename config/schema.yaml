@@ -3,6 +3,10 @@ output_dir:
   mode: w
   required: true
   help: Root output directory.
+dataset_id:
+  type: String
+  required: true
+  help: Dataset identifier used in final filenames; letters, digits, dots, underscores, and hyphens only.
 mzML_csv:
   type: Path
   mode: r
@@ -22,6 +26,54 @@ consensusXML_csv:
   mode: r
   required: false
   help: One premerged consensusXML file per TMT plex.
+tmt_workflow:
+  type: String
+  required: false
+  help: Select scan_based (reporter-ion peptide quantification) or feature_based (MS1 feature-based TMT quantification).
+FeatureFinderIdentification:
+  type: Namespace
+  required: false
+  help: FeatureFinderIdentification options for the feature-based workflow.
+MapAlignerIdentification:
+  type: Namespace
+  required: false
+  help: MapAlignerIdentification options for the feature-based workflow.
+FeatureLinkerUnlabeledQT:
+  type: Namespace
+  required: false
+  help: FeatureLinkerUnlabeledQT options for the feature-based workflow.
+IsobaricAnalyzer:
+  type: Namespace
+  required: false
+  help: IsobaricAnalyzer options, including extraction and quantification.
+FileMerger:
+  type: Namespace
+  required: false
+  help: Optional FileMerger command options; append_method is pipeline-managed.
+FileFilter:
+  type: Namespace
+  required: false
+  help: Optional FileFilter command options; sort is pipeline-managed.
+IDMapper:
+  type: Namespace
+  required: false
+  help: IDMapper options, including feature and consensus options.
+ProteinQuantifier:
+  type: Namespace
+  required: false
+  help: ProteinQuantifier options.
+IDConflictResolver:
+  type: Namespace
+  required: false
+  help: IDConflictResolver options.
+MADNormalizer:
+  type: Namespace
+  required: false
+  help: MSPtools MADNormalizer options; underscores become CLI hyphens.
+fixZeroPlex:
+  type: Namespace
+  required: false
+  help: MSPtools fixZeroPlex options; underscores become CLI hyphens.
 consensusXML_entrypoint:
   type: Bool
   required: false
@@ -31,18 +83,10 @@ idXML_csv:
   mode: r
   required: true
   help: One matching idXML file per plex.
-protein_quantifier_best_charge_and_fraction:
-  type: Bool
-  required: false
-  help: Report peptide abundance separately by fraction and charge state.
 tmt_normalization_method:
   type: String
   required: false
   help: Normalization method, either mad or openms.
-mad_normalizer_quasi_intensity:
-  type: Bool
-  required: false
-  help: Write MAD-normalized reference-scaled quasi-intensities instead of log2 ratios.
 filter_na_consensus_handles:
   type: Bool
   required: false

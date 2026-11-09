@@ -2,48 +2,48 @@
  * Common groovy functions
  */
 
-/**
- * Get extra arguments from the params ConfigMap object to be parsed to processes using OpenMS
- * commands
- */
-def getOpenMSArgs(ArrayList parameters, ArrayList flags, Map parameter_mapper, Map flag_mapper) {
-    def getArgName = { it }
-    return getArgsGeneral(parameters, flags, parameter_mapper, flag_mapper, getArgName)
+/** Render nested tool options, preserving zero and false values. */
+def getToolArgs(Map options, Set flags = [] as Set, String prefix = '-') {
+    def args = []
+    appendToolArgs(options ?: [:], [], flags, prefix, args)
+    return args.join(' ')
 }
 
-def getPhilosopherArgs(ArrayList parameters, ArrayList flags, Map parameter_mapper, Map flag_mapper) {
-    def getArgName = { it }
-    return getArgsGeneral(parameters, flags, parameter_mapper, flag_mapper, getArgName)
-}
-
-def getArgsGeneral(ArrayList parameters, ArrayList flags, Map parameter_mapper, Map flag_mapper, Closure getArgName) {
-    def args = ""
-    parameters.each{ it ->
-        if (params.containsKey(it) && params[it] != null) {
-            args += " ${getArgName(it)} ${params[it]}"
+def appendToolArgs(Map values, List path, Set flags, String prefix, List args) {
+    values.each { key, value ->
+        def parts = path + [key.toString()]
+        if (value instanceof Map) {
+            appendToolArgs(value, parts, flags, prefix, args)
+        } else if (value != null) {
+            if (parts.size() == 1 && parts[0] in ['in', 'out', 'id', 'threads', 'type',
+                    'peptide_out', 'input_path', 'output_path', 'layout', 'scaling_report_path']) {
+                throw new IllegalArgumentException("${parts[0]} is managed by the pipeline")
+            }
+            def name = parts.join(':')
+            def option = "${prefix}${prefix == '--' ? name.replace('_', '-') : name}"
+            if (name in flags) {
+                if (!(value instanceof Boolean)) {
+                    throw new IllegalArgumentException("${name} must be a boolean flag")
+                }
+                if (value) args << option
+            } else {
+                def items = value instanceof Collection ? value : [value]
+                if (items.isEmpty()) {
+                    throw new IllegalArgumentException("${name} cannot have an empty value list")
+                }
+                args << option
+                items.each { item ->
+                    def quoted = item.toString().replace("'", "'\"'\"'")
+                    args << "'${quoted}'"
+                }
+            }
         }
     }
-    flags.each { it ->
-        if (params.containsKey(it) && params[it] == true) {
-            args += " ${getArgName(it)}"
-        }
-    }
-    parameter_mapper.each { key, val ->
-        if (params.containsKey(key) && params[key] != null) {
-            args += " ${getArgName(val)} ${params[key]}"
-        }
-    }
-    flag_mapper.each { key, val ->
-        if (params.containsKey(key) && params[key] == true) {
-            args += " ${getArgName(val)}"
-        }
-    }
-    return args
 }
 
 def printPrelogue(){
     def options = [:]
-    exclude_args = [
+    def exclude_args = [
         'mzML_csv', 'consensusXML_csv', 'idXML_csv', 'channel_csv', 'decoy_database', 'output_dir', 'openms_version', 'docker_image_openms',
         'project_script_mount_options',
         'max_cpus', 'max_memory', 'philosopher_version', 'docker_image_philosopher',
