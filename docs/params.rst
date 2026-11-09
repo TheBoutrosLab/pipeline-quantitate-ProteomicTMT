@@ -51,6 +51,26 @@ extract_isobaric
      - flag
 
 
+link_TMTFeatures
+----------------
+
+.. list-table::
+   :header-rows: 1
+
+   * - Config key
+     - Command option
+     - Kind
+   * - ``link_tmt_features_use_identifications``
+     - ``-algorithm:use_identifications``
+     - value
+   * - ``link_tmt_features_rt_tolerance``
+     - ``-algorithm:distance_RT:max_difference`` (seconds)
+     - value
+   * - ``link_tmt_features_mz_tolerance_ppm``
+     - ``-algorithm:distance_MZ:max_difference`` with ``-algorithm:distance_MZ:unit ppm``
+     - value
+
+
 fix_ProteinQuantCSV_unquantified
 --------------------------------
 

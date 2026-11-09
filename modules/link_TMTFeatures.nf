@@ -16,6 +16,11 @@ process link_TMTFeatures {
         return "cp ${inputs[0]} ${fraction}.linked.raw.consensusXML"
     }
     """
-    FeatureLinkerUnlabeledQT -in ${inputs.join(' ')} -out ${fraction}.linked.raw.consensusXML -keep_subelements -threads ${task.cpus}
+    FeatureLinkerUnlabeledQT -in ${inputs.join(' ')} \\
+        -out ${fraction}.linked.raw.consensusXML -keep_subelements \\
+        -algorithm:use_identifications ${params.link_tmt_features_use_identifications} \\
+        -algorithm:distance_RT:max_difference ${params.link_tmt_features_rt_tolerance} \\
+        -algorithm:distance_MZ:max_difference ${params.link_tmt_features_mz_tolerance_ppm} \\
+        -algorithm:distance_MZ:unit ppm -threads ${task.cpus}
     """
 }
