@@ -53,6 +53,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-based-tmt-workflow/">Feature-based TMT workflow</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
                 </li>
               </ul>
@@ -86,7 +90,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Outputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/2fc02b0ac0574e91d31ef6d930e3a5553bab4181/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/dd561b7d3fb1f067a6dbd1b66927475cd09e083b/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -95,42 +99,54 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="outputs">Outputs</h2>
-<p>Final results are saved under <code>&lt;output_dir&gt;/quantitate-ProteomicTMT-&lt;version&gt;/OpenMS-&lt;version&gt;/output/&lt;plex_id&gt;/</code>:</p>
+<p>Final results are saved under <code>&lt;output_dir&gt;/quantitate-ProteomicTMT-&lt;version&gt;/OpenMS-&lt;version&gt;/output/</code>. Replace <code>${dataset_id}</code> below with the configured dataset identifier:</p>
 <table>
 <thead>
 <tr>
+<th>Workflow</th>
 <th>Output</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>&lt;plex_id&gt;_FileMerger.consensusXML</code></td>
-<td>Merged reporter-ion features, for mzML input.</td>
+<td>Scan-based</td>
+<td><code>${dataset_id}_ScanBased.consensusXML</code></td>
+<td>Merged plex map before peptide-identification conflict resolution.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_id&gt;_IDMapper.consensusXML</code></td>
-<td>Consensus features with peptide identifications mapped to them.</td>
+<td>Feature-based</td>
+<td><code>${dataset_id}_FeatureBased.consensusXML</code></td>
+<td>Linked feature map before peptide-identification conflict resolution.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_id&gt;_IDConflictResolver.consensusXML</code></td>
-<td>Consensus features after conflicting identifications are resolved.</td>
+<td>Feature-based</td>
+<td><code>${dataset_id}_LinkedFeatures.tsv</code></td>
+<td>Linked feature/channel rows from all fractions and plexes; includes <code>fraction_id</code>, <code>plex_id</code>, and <code>sample_name</code>.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_id&gt;_ProteinQuantifier_peptide_fixZeroPlex.csv</code></td>
-<td>Final peptide abundances when normalization is enabled.</td>
+<td>Both</td>
+<td><code>${dataset_id}_IDConflictResolver.consensusXML</code></td>
+<td>Dataset map after resolving conflicting identifications.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_id&gt;_ProteinQuantifier_peptide.csv</code></td>
-<td>Final peptide abundances when normalization is disabled.</td>
+<td>Both</td>
+<td><code>${dataset_id}_ProteinQuantifier_peptide.csv</code></td>
+<td>Peptide quantification when normalization is disabled.</td>
 </tr>
 <tr>
-<td><code>&lt;plex_id&gt;_unmapped.consensusXML</code></td>
-<td>Unmapped features, when <code>remove_mapped_consensus = true</code>.</td>
+<td>Both with OpenMS normalization or MAD quasi-intensities</td>
+<td><code>${dataset_id}_ProteinQuantifier_peptide_fixZeroPlex.csv</code></td>
+<td>Final peptide quantification after column repair and missing-value cleanup.</td>
+</tr>
+<tr>
+<td>Both with MAD log2 ratios</td>
+<td><code>${dataset_id}_ProteinQuantifier_peptide.csv</code></td>
+<td>Peptide table after column repair; zero ratios remain zero.</td>
 </tr>
 </tbody>
 </table>
-<p>Intermediate files are published under <code>intermediate/&lt;plex_id&gt;/</code> when <code>save_intermediate_files = true</code>. Process logs and Nextflow reports are written under the timestamped <code>log-quantitate-ProteomicTMT-*</code> directory. Three NFTest integration cases are defined in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/2fc02b0ac0574e91d31ef6d930e3a5553bab4181/nftest.yml">nftest.yml</a>; fixture setup is described in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/2fc02b0ac0574e91d31ef6d930e3a5553bab4181/test/README.md">test/README.md</a>.</p>
+<p>Plex and fraction maps, per-run feature allocation tables, and scan-assignment/QC reports are published under <code>intermediate/</code> only when <code>save_intermediate_files = true</code>. Process logs and Nextflow reports are written under the timestamped <code>log-quantitate-ProteomicTMT-*</code> directory. Four NFTest integration cases are defined in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/dd561b7d3fb1f067a6dbd1b66927475cd09e083b/nftest.yml">nftest.yml</a>; fixture setup is described in <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/dd561b7d3fb1f067a6dbd1b66927475cd09e083b/test/README.md">test/README.md</a>.</p>
 <hr />
               
             </div>

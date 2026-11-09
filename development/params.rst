@@ -1,166 +1,132 @@
-TMT command parameters
-======================
+Program parameters
+==================
 
-These keys are read by the current process modules and passed to the indicated command option. OpenMS and MSPTools defaults come from the configured images.
+The pipeline reads optional command settings from namespaces named after the
+programs. Nested keys become colon-separated options: for example,
+``FeatureFinderIdentification.detect.mapping_tolerance`` becomes
+``-detect:mapping_tolerance``. Unset keys are omitted, so the configured image
+supplies its own default. A numeric zero or a valued ``false`` is passed.
+A list value is passed as multiple values for one option. Only the presence-only
+options listed below are treated as flags: ``true`` adds
+that option and ``false`` omits it. Pipeline-owned input, output, thread, and
+reporter-type options should not be placed in these namespaces.
 
+The full option list and version-specific defaults are available from each
+configured tool's ``-helphelp`` (OpenMS) or ``--help`` (MSPtools). In OpenMS
+3.5, a boolean parameter whose default is ``true`` takes an explicit value;
+for example, ``IsobaricAnalyzer.extraction.purity_interpolation = false``
+passes ``-extraction:purity_interpolation 'false'``. False-by-default boolean
+parameters registered as flags use the presence-only form below.
 
-extract_isobaric
-----------------
+.. list-table:: Program namespaces
+   :header-rows: 1
+
+   * - Config namespace
+     - Program
+     - Flag keys (all other keys take a value)
+   * - ``IsobaricAnalyzer``
+     - ``IsobaricAnalyzer``
+     - ``extraction.discard_low_intensity_quantifications``
+   * - ``FileMerger``
+     - ``FileMerger``
+     - ``annotate_file_origin``, ``raw.rt_auto``, ``raw.rt_filename``
+   * - ``FileFilter``
+     - ``FileFilter``
+     - ``sort``, ``peak_options.sort_peaks``, ``peak_options.no_chromatograms``,
+       ``peak_options.remove_chromatograms``, ``peak_options.remove_empty``,
+       ``peak_options.remove_metadataarrays``, ``spectra.remove_zoom``,
+       ``spectra.select_zoom``, ``consensus.map_and``, ``f_and_c.remove_hull``,
+       ``id.remove_clashes``, ``id.keep_best_score_id``,
+       ``id.remove_annotated_features``, ``id.remove_unannotated_features``,
+       ``id.remove_unassigned_ids``, ``id.blacklist_imperfect``
+   * - ``IDMapper``
+     - ``IDMapper``
+     - ``ignore_charge``, ``consensus.use_subelements``,
+       ``consensus.annotate_ids_with_subelements``
+   * - ``ProteinQuantifier``
+     - ``ProteinQuantifier``
+     - ``best_charge_and_fraction``, ``top.include_all``,
+       ``consensus.normalize``, ``consensus.fix_peptides``, ``ratios``, ``ratiosSILAC``
+   * - ``IDConflictResolver``
+     - ``IDConflictResolver``
+     - None
+   * - ``FeatureFinderIdentification``
+     - ``FeatureFinderIdentification``
+     - ``svm.no_selection``, ``svm.no_shrinking``, ``quantify_decoys``,
+       ``EMGScoring.init_mom``, ``model.unweighted_fit``,
+       ``model.no_imputation``, ``model.each_trace``
+   * - ``MapAlignerIdentification``
+     - ``MapAlignerIdentification``
+     - ``store_original_rt``, ``algorithm.score_cutoff``,
+       ``algorithm.use_feature_rt``, ``model.linear.symmetric_regression``,
+       ``model.lowess.auto_span``
+   * - ``FeatureLinkerUnlabeledQT``
+     - ``FeatureLinkerUnlabeledQT``
+     - ``algorithm.use_identifications``, ``algorithm.ignore_charge``
+   * - ``MADNormalizer``
+     - ``msptools ConsensusXML MADNormalizer``
+     - ``virtual_reference``, ``quasi_intensity``, ``bridge_scale``, ``allow_virtual_bridge``
+   * - ``fixZeroPlex``
+     - ``msptools ProteinQuantCSV fixZeroPlex``
+     - ``greedy_group_resolution``, ``nocheck_intensity``
+
+MSPtools option names use hyphens on the command line, so
+``MADNormalizer.virtual_reference_min_channels`` becomes
+``--virtual-reference-min-channels``. OpenMS options use colons between nested
+levels. For example, ``FeatureLinkerUnlabeledQT.algorithm.distance_MZ.max_difference``
+becomes ``-algorithm:distance_MZ:max_difference``.
+
+The pipeline sets defaults for ``IDMapper.consensus`` flags,
+``ProteinQuantifier.best_charge_and_fraction``, selected ``MADNormalizer``
+options, and the feature linker's identification, RT, and m/z settings in
+``config/default.config``. Set other options in a run config only when needed.
+For example, the following are optional values supported directly by OpenMS::
+
+    params {
+        FeatureFinderIdentification {
+            extract { mz_window = 10.0 }
+            detect { mapping_tolerance = 0.0 }
+            EMGScoring { max_iteration = 100 }
+            model { type = 'symmetric' }
+        }
+        MapAlignerIdentification {
+            algorithm { use_feature_rt = true; use_unassigned_peptides = false }
+        }
+    }
+
+Frequently adjusted valued options
+----------------------------------
 
 .. list-table::
    :header-rows: 1
 
-   * - Config key or manifest field
+   * - Config path (under ``params``)
      - Command option
-     - Kind
-   * - Config ``plex_type``
-     - ``-type``
-     - value
-   * - ``isobaric_analyzer_extraction_select_activation``
-     - ``-extraction:select_activation``
-     - value
-   * - ``isobaric_analyzer_extraction_reporter_mass_shift``
-     - ``-extraction:reporter_mass_shift``
-     - value
-   * - ``isobaric_analyzer_extraction_min_precursor_intensity``
-     - ``-extraction:min_precursor_intensity``
-     - value
-   * - ``isobaric_analyzer_extraction_min_reporter_intensity``
-     - ``-extraction:min_reporter_intensity``
-     - value
-   * - ``isobaric_analyzer_extraction_min_precursor_purity``
-     - ``-extraction:min_precursor_purity``
-     - value
-   * - ``isobaric_analyzer_extraction_precursor_isotope_deviation``
-     - ``-extraction:precursor_isotope_deviation``
-     - value
-   * - ``isobaric_analyzer_extraction_keep_unannotated_precursor``
-     - ``-extraction:keep_unannotated_precursor``
-     - value
-   * - ``isobaric_analyzer_quantification_isotope_correction``
-     - ``-quantification:isotope_correction``
-     - value
-   * - ``tmt_normalization_method`` with ``enable_tmt_normalization = true``
-     - ``-quantification:normalization`` for ``openms``; omitted otherwise
-     - flag
-   * - ``isobaric_analyzer_extraction_purity_interpolation``
-     - ``-extraction:purity_interpolation``
-     - flag
-   * - ``isobaric_analyzer_extraction_discard_low_intensity_quantifications``
-     - ``-extraction:discard_low_intensity_quantifications``
-     - flag
+   * - ``FeatureFinderIdentification.extract.mz_window``
+     - ``-extract:mz_window``
+   * - ``FeatureFinderIdentification.detect.peak_width``
+     - ``-detect:peak_width``
+   * - ``FeatureFinderIdentification.detect.mapping_tolerance``
+     - ``-detect:mapping_tolerance``
+   * - ``FeatureFinderIdentification.model.type``
+     - ``-model:type``
+   * - ``FeatureFinderIdentification.EMGScoring.max_iteration``
+     - ``-EMGScoring:max_iteration``
+   * - ``MapAlignerIdentification.algorithm.use_feature_rt``
+     - ``-algorithm:use_feature_rt`` (presence-only flag)
+   * - ``MapAlignerIdentification.algorithm.use_unassigned_peptides``
+     - ``-algorithm:use_unassigned_peptides`` (valued boolean)
+   * - ``MapAlignerIdentification.algorithm.max_rt_shift``
+     - ``-algorithm:max_rt_shift``
+   * - ``MapAlignerIdentification.model.type``
+     - ``-model:type``
+   * - ``FeatureLinkerUnlabeledQT.algorithm.use_identifications``
+     - ``-algorithm:use_identifications`` (presence-only flag in OpenMS 3.5)
+   * - ``FeatureLinkerUnlabeledQT.algorithm.distance_RT.max_difference``
+     - ``-algorithm:distance_RT:max_difference`` (seconds)
+   * - ``FeatureLinkerUnlabeledQT.algorithm.distance_MZ.max_difference``
+     - ``-algorithm:distance_MZ:max_difference`` (unit given by ``algorithm.distance_MZ.unit``)
 
-
-fix_ProteinQuantCSV_unquantified
---------------------------------
-
-.. list-table::
-   :header-rows: 1
-
-   * - Config key
-     - Command option
-     - Kind
-   * - ``protein_quantifier_format_separator``
-     - ``--separator``
-     - value
-   * - ``protein_quantifier_format_quoting``
-     - ``--quoting``
-     - value
-
-
-map_idXML2consensusXML
-----------------------
-
-.. list-table::
-   :header-rows: 1
-
-   * - Config key
-     - Command option
-     - Kind
-   * - ``id_mapper_rt_tolerance``
-     - ``-rt_tolerance``
-     - value
-   * - ``id_mapper_mz_tolerance``
-     - ``-mz_tolerance``
-     - value
-   * - ``id_mapper_mz_measure``
-     - ``-mz_measure``
-     - value
-   * - ``id_mapper_mz_reference``
-     - ``-mz_reference``
-     - value
-   * - ``id_mapper_feature_use_centroid_rt``
-     - ``-feature:use_centroid_rt``
-     - value
-   * - ``id_mapper_feature_use_centroid_mz``
-     - ``-feature:use_centroid_mz``
-     - value
-   * - ``id_mapper_consensus_use_subelements``
-     - ``-consensus:use_subelements``
-     - flag
-   * - ``id_mapper_consensus_annotate_ids_with_subelements``
-     - ``-consensus:annotate_ids_with_subelements``
-     - flag
-
-
-normalize_consensusXML_MAD
---------------------------
-
-.. list-table::
-   :header-rows: 1
-
-   * - Config key
-     - Command option
-     - Kind
-   * - ``min_int``
-     - ``--min-int``
-     - value
-   * - ``virtual_reference_method``
-     - ``--virtual-reference-method``
-     - value
-   * - ``virtual_reference``
-     - ``--virtual-reference``
-     - flag
-   * - ``mad_normalizer_quasi_intensity``
-     - ``--quasi-intensity``
-     - flag
-
-
-quantify_peptides
------------------
-
-.. list-table::
-   :header-rows: 1
-
-   * - Config key
-     - Command option
-     - Kind
-   * - ``protein_quantifier_format_separator``
-     - ``-format:separator``
-     - value
-   * - ``protein_quantifier_format_quoting``
-     - ``-format:quoting``
-     - value
-   * - ``protein_quantifier_format_replacement``
-     - ``-format:replacement``
-     - value
-
-
-resolve_conflict
-----------------
-
-.. list-table::
-   :header-rows: 1
-
-   * - Config key
-     - Command option
-     - Kind
-   * - ``conflict_resolver_resolve_between_features``
-     - ``-resolve_between_features``
-     - value
-
-
-Extraction-specific inputs
---------------------------
-
-The run-level ``plex_type`` sets ``-type`` for every mzML plex. The ``channel_csv`` groups reporter descriptions by ``plex_id``. A row whose description is ``reference`` supplies that plex's ``-reference_channel``; optional ``correction_matrix`` values in ``mzML.csv`` use an option under the reporter type. ``tmt_normalization_method`` selects ``openms`` (default) or ``mad`` for every plex in the run. OpenMS normalization runs in IsobaricAnalyzer and requires mzML input for every plex; MAD normalization runs independently on each plex after consensusXML merging. ``enable_tmt_normalization = false`` skips both. ``protein_quantifier_best_charge_and_fraction`` defaults to true and controls ``-best_charge_and_fraction``. Set it to false to omit the flag.
+The pipeline selects IsobaricAnalyzer normalization and the reporter type
+from workflow settings. It supplies all program input and output paths and
+thread counts. These options are not user overrides.

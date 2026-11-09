@@ -55,6 +55,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-based-tmt-workflow/">Feature-based TMT workflow</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
                 </li>
               </ul>
@@ -86,7 +90,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Overview</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/2fc02b0ac0574e91d31ef6d930e3a5553bab4181/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/dd561b7d3fb1f067a6dbd1b66927475cd09e083b/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -95,7 +99,8 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="overview">Overview</h2>
-<p>This Nextflow DSL2 pipeline quantifies peptides from one or more separate TMT plexes in a single run. Each plex has its own reporter channels and idXML. A plex can start from one or more mzML files or one premerged consensusXML. The pipeline publishes peptide results separately for each plex; cross-plex peptide integration belongs in quantitate-ProteomicProtein.</p>
+<p>This Nextflow DSL2 pipeline quantifies peptides from one or more separate TMT plexes in a single run. Each plex has its own reporter channels and idXML. A plex can start from one or more mzML files or one premerged consensusXML. Both workflows publish one dataset-level consensusXML and one dataset-level peptide CSV. The feature-based workflow also publishes a linked-feature TSV.</p>
+<p><img alt="TMT scan-based and feature-based workflow schematic" src="../img/flow-diagram.svg?raw=true" /></p>
 <hr />
               
             </div>
