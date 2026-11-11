@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Feature-based TMT workflow - pipeline-quantitate-ProteomicTMT</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Feature-based TMT workflow";
+        var mkdocs_page_input_path = "feature-based-tmt-workflow.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-quantitate-ProteomicTMT
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Feature-based TMT workflow</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-quantitate-ProteomicTMT</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Feature-based TMT workflow</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/v2.1.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="feature-based-tmt-workflow">Feature-based TMT workflow</h2>
+<p>Set <code>tmt_workflow = 'feature_based'</code> and <code>consensusXML_entrypoint = false</code> to select the optional MS1 feature-based workflow. For normalization, set <code>tmt_normalization_method = 'mad'</code>; the default <code>openms</code> method is not valid with this workflow. IsobaricAnalyzer normalization stays off to preserve reporter-ion proportions used for channel-area allocation. It estimates TMT channel areas from each integrated MS1 feature and the reporter-ion proportions of its matched PSMs. These estimates should be treated as experimental until validated against benchmark data. Bridge scaling is off by default. The default <code>tmt_workflow = 'scan_based'</code> uses the reporter-based peptide workflow.</p>
+<p>For this workflow, add <code>fraction_id</code> to <code>mzML.csv</code>. Each <code>plex_id</code> must have one mzML per <code>fraction_id</code>, and every plex must have the same set of fraction IDs. One validated idXML still covers all mzML files for a plex. The pipeline splits those identifications by source run, finds MS1 features with <code>FeatureFinderIdentification</code>, aligns corresponding fractions across plexes with <code>MapAlignerIdentification</code>, and extracts reporter ions from each run with <code>IsobaricAnalyzer</code>. After <code>IDMapper</code>, it matches reporter scans to FFId PSMs by native scan reference. A custom step sums reporter intensities over a feature's matched scans and assigns channel area as <code>feature MS1 area × channel reporter sum / total reporter sum</code>. Scans assigned to multiple features or with conflicting peptide sequences stop the run. Missing reporter channels remain missing.</p>
+<p>After linking plexes within each fraction, the feature-based workflow merges those linked maps across all fractions into <code>${dataset_id}_FeatureBased.consensusXML</code>. It verifies that the channel columns represent the same plexes and labels in every fraction and preserves the original plex filenames for <code>ProteinQuantifier</code>. <code>IDConflictResolver</code> and <code>ProteinQuantifier</code> then write one <code>${dataset_id}_ProteinQuantifier_peptide.csv</code> containing the MS1-scaled channel-area estimates across all plexes and fractions. <code>ProteinQuantifier.best_charge</code> controls detailed peptide rows by charge and fraction; the default is <code>true</code>. With MAD enabled, normalization runs on the merged feature map before these steps.</p>
+<p>The current merges reuse one set of plex/channel headers across source fractions. ProteinQuantifier therefore sees one design fraction per plex in the dataset peptide CSV; its <code>fraction</code> column does not identify the input <code>fraction_id</code>. The feature-based linked-feature TSV retains the input fraction IDs. This OpenMS upgrade keeps that layout.</p>
+<p>Both dataset consensusXML versions and a combined <code>${dataset_id}_LinkedFeatures.tsv</code> are published in the final <code>output/</code> directory. Each fraction's linked consensusXML and TSV are kept under <code>intermediate/feature_based/</code> only when <code>save_intermediate_files = true</code>. <code>FeatureLinkerUnlabeledQT -keep_subelements</code> retains each plex's TMT channel handles.</p>
+<p>Cross-plex linking uses peptide identifications when both features have them, with configurable aligned RT (100 seconds by default) and MS1 m/z (10 ppm) limits; unidentified features can still link by RT, m/z, and charge.</p>
+<p>The post-link step matches stable channel-handle IDs to the per-run values and writes each plex's MS1 area and reporter sums as namespaced consensus-element metadata and TSV rows. The combined table preserves <code>fraction_id</code>, <code>plex_id</code>, reporter <code>channel_label</code>, and channel-description <code>sample_name</code> on every row. <code>merge_TMTFeatureTables</code> concatenates the fraction tables without summing measurements and reconciles <code>linked_feature_id</code> with the final consensusXML if OpenMS changes duplicate IDs during fraction merging. Per-run <code>*.feature-tmt-qc.tsv</code> files report matched scan counts and reporter totals; <code>*.feature-tmt-scan-assignment.tsv</code> files list identified reporter scans and their assigned feature IDs. These, and the per-run value sidecars, are optional intermediate diagnostics. Channel descriptions and plex identity remain in the consensusXML column headers. The feature-based pre-resolution map contains PSMs attached to FFId features; it does not include every PSM from the input idXML. With MAD enabled, the linked table also contains <code>normalized_channel_area</code> and <code>plex_scale_factor</code>; <code>estimated_channel_area</code> remains the original allocation. The final output includes <code>${dataset_id}_MADNormalizer.consensusXML</code> and <code>${dataset_id}_MADNormalizer_scaling.tsv</code>. Optional <code>MADNormalizer.bridge_scale = true</code> aligns each plex’s median of all positive finite reference areas to the median of the plex medians. This uses all positive finite reference areas in each plex, without requiring the same features in every plex. It requires quasi-intensity output. With a physical bridge, the reference sample should be shared across plexes; with a virtual reference, set <code>MADNormalizer.allow_virtual_bridge = true</code> and assume comparable overall sample composition. The D’Angelo feature-based test uses a median virtual reference and enables bridge scaling as a technical workflow check. Channel 126 is labeled as a sample in this test and participates in each feature’s virtual reference.</p>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../pipeline-steps/" class="btn btn-neutral float-left" title="Pipeline Steps"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../inputs/" class="btn btn-neutral float-right" title="Inputs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/tree/v2.1.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../pipeline-steps/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../inputs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

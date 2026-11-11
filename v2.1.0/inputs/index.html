@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Inputs - pipeline-quantitate-ProteomicTMT</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Inputs";
+        var mkdocs_page_input_path = "inputs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-quantitate-ProteomicTMT
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-based-tmt-workflow/">Feature-based TMT workflow</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Inputs</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#mzml-csv">mzML CSV</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#consensusxml-csv">consensusXML CSV</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#idxml-csv">idXML CSV</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#channel-csv">Channel CSV</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#config">Config</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-quantitate-ProteomicTMT</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Inputs</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/v2.1.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="inputs">Inputs</h2>
+<h3 id="mzml-csv">mzML CSV</h3>
+<p>With <code>consensusXML_entrypoint = false</code> (default), use <code>mzML_csv</code>. It has one row per mzML fraction. Rows with the same <code>plex_id</code> belong to one plex. Set the shared reporter type once with <code>plex_type</code> in the run config.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plex_id</code></td>
+<td>yes</td>
+<td>Unique plex identifier using letters, digits, dots, underscores, or hyphens.</td>
+</tr>
+<tr>
+<td><code>mzML</code></td>
+<td>yes</td>
+<td>Absolute path to this fraction's mzML.</td>
+</tr>
+<tr>
+<td><code>fraction_id</code></td>
+<td>feature-based only</td>
+<td>Identifier for corresponding fractions across plexes; unique within a plex.</td>
+</tr>
+<tr>
+<td><code>correction_matrix</code></td>
+<td>optional</td>
+<td>Isotope-correction rows passed to IsobaricAnalyzer; applies to mzML input.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-csv">plex_id,mzML
+plex_01,/data/plex_01_fraction_1.mzML
+plex_01,/data/plex_01_fraction_2.mzML
+</code></pre>
+<p>For feature-based TMT, add the matching fraction IDs:</p>
+<pre><code class="language-csv">plex_id,fraction_id,mzML
+plex_01,F1,/data/plex_01_fraction_1.mzML
+plex_02,F1,/data/plex_02_fraction_1.mzML
+</code></pre>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/05b77161a0a61df0a0ee6f8ed4dbf66faac98e61/input/mzML.csv">input/mzML.csv</a> as a template. Paths must be accessible to Nextflow and the configured containers.</p>
+<h3 id="consensusxml-csv">consensusXML CSV</h3>
+<p>With <code>consensusXML_entrypoint = true</code>, use <code>consensusXML_csv</code>. It has exactly one <code>consensusXML</code> path per <code>plex_id</code> and requires no channel CSV; channel descriptions must already be in the consensusXML headers.</p>
+<pre><code class="language-csv">plex_id,consensusXML
+plex_01,/data/plex_01.consensusXML
+plex_02,/data/plex_02.consensusXML
+</code></pre>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/05b77161a0a61df0a0ee6f8ed4dbf66faac98e61/input/consensusXML.csv">input/consensusXML.csv</a> as a template.</p>
+<h3 id="idxml-csv">idXML CSV</h3>
+<p>The idXML CSV has exactly one row per plex. Its <code>plex_id</code> values must match the chosen source CSV exactly, including for a multi-fraction plex.</p>
+<pre><code class="language-csv">plex_id,idXML
+plex_01,/data/plex_01.idXML
+plex_02,/data/plex_02.idXML
+</code></pre>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/05b77161a0a61df0a0ee6f8ed4dbf66faac98e61/input/idXML.csv">input/idXML.csv</a> as a template.</p>
+<h3 id="channel-csv">Channel CSV</h3>
+<p>For mzML input, provide one <code>channel_csv</code> containing every plex's reporter channels. Its <code>plex_id</code> values must match the mzML CSV exactly. The pipeline groups these rows by plex ID and passes only that plex's channels to IsobaricAnalyzer. Reporter labels must match the run's <code>plex_type</code>. Sample names belong in the <code>description</code> column. Label one channel per plex <code>reference</code> when using OpenMS normalization or MAD normalization with a physical reference; its reporter label is passed to IsobaricAnalyzer. MAD normalization with a virtual reference does not require this label.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plex_id</code></td>
+<td>yes</td>
+<td>Plex identifier matching the mzML and idXML CSVs.</td>
+</tr>
+<tr>
+<td><code>channel</code></td>
+<td>yes</td>
+<td>Reporter label, such as <code>126</code> or <code>127N</code> for TMT10plex.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>yes</td>
+<td>Channel identifier; use <code>reference</code> for a physical MAD reference.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-csv">plex_id,channel,description
+plex_01,126,reference
+plex_01,127N,sample_01
+plex_02,126,reference
+plex_02,127N,sample_02
+</code></pre>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/05b77161a0a61df0a0ee6f8ed4dbf66faac98e61/input/channel.csv">input/channel.csv</a> as a channel CSV template.</p>
+<p>A premerged consensusXML must already contain channel descriptions in its column headers.</p>
+<h3 id="config">Config</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>consensusXML_entrypoint</code></td>
+<td>bool</td>
+<td>Select the premerged consensusXML entry point. Defaults to <code>false</code> (mzML).</td>
+</tr>
+<tr>
+<td><code>mzML_csv</code></td>
+<td>string(path)</td>
+<td>mzML fractions; required when <code>consensusXML_entrypoint = false</code>.</td>
+</tr>
+<tr>
+<td><code>channel_csv</code></td>
+<td>string(path)</td>
+<td>Reporter channels and sample descriptions keyed by plex ID; required for mzML input.</td>
+</tr>
+<tr>
+<td><code>plex_type</code></td>
+<td>string</td>
+<td>OpenMS reporter type shared by all plexes; required for mzML input.</td>
+</tr>
+<tr>
+<td><code>consensusXML_csv</code></td>
+<td>string(path)</td>
+<td>One premerged consensusXML per plex; required when <code>consensusXML_entrypoint = true</code>.</td>
+</tr>
+<tr>
+<td><code>idXML_csv</code></td>
+<td>string(path)</td>
+<td>Required CSV with one idXML path per plex.</td>
+</tr>
+<tr>
+<td><code>output_dir</code></td>
+<td>string(path)</td>
+<td>Root output directory.</td>
+</tr>
+<tr>
+<td><code>dataset_id</code></td>
+<td>string</td>
+<td>Required dataset identifier used in final filenames; letters, digits, dots, underscores, and hyphens only.</td>
+</tr>
+<tr>
+<td><code>enable_tmt_normalization</code></td>
+<td>bool</td>
+<td>Enable the selected normalization method. Defaults to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>tmt_normalization_method</code></td>
+<td>string</td>
+<td><code>openms</code> (default) or <code>mad</code>; OpenMS normalization requires every plex to use mzML input.</td>
+</tr>
+<tr>
+<td><code>MADNormalizer.virtual_reference</code></td>
+<td>bool</td>
+<td>Have MADNormalizer derive a reference from each feature's reporter intensities. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>MADNormalizer.virtual_reference_method</code></td>
+<td>string</td>
+<td><code>median</code> or <code>mean</code> for a virtual MAD reference. MSPtools defaults to <code>median</code>.</td>
+</tr>
+<tr>
+<td><code>MADNormalizer.virtual_reference_min_channels</code></td>
+<td>integer</td>
+<td>Minimum valid channels per feature and plex for a virtual reference. Defaults to <code>1</code>; channels must be finite and above <code>MADNormalizer.min_int</code>.</td>
+</tr>
+<tr>
+<td><code>MADNormalizer.quasi_intensity</code></td>
+<td>bool</td>
+<td>Write reference-scaled quasi-intensities instead of log2 ratios for MAD. Defaults to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>MADNormalizer.bridge_scale</code></td>
+<td>bool</td>
+<td>Scale feature-based plexes by their median valid reference areas. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>MADNormalizer.allow_virtual_bridge</code></td>
+<td>bool</td>
+<td>Explicitly allow bridge scaling with virtual references. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>filter_na_consensus_handles</code></td>
+<td>bool</td>
+<td>Remove NaN reporter handles after MAD normalization. Defaults to <code>false</code> to preserve CSV columns.</td>
+</tr>
+<tr>
+<td><code>ProteinQuantifier.best_charge</code></td>
+<td>bool</td>
+<td>Report detailed peptide abundances by charge and fraction. Defaults to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>ProteinQuantifier.fractions.aggregate</code></td>
+<td>string</td>
+<td>Combine fractions for assay-level abundances; defaults to <code>sum</code>. Detailed peptide rows remain separate.</td>
+</tr>
+<tr>
+<td><code>tmt_workflow</code></td>
+<td>string</td>
+<td>Select <code>scan_based</code> (default) or <code>feature_based</code>. The feature-based workflow requires mzML input and <code>fraction_id</code>; normalization requires <code>tmt_normalization_method = mad</code>.</td>
+</tr>
+<tr>
+<td><code>remove_mapped_consensus</code></td>
+<td>bool</td>
+<td>Also publish the consensusXML of unmapped features. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>save_intermediate_files</code></td>
+<td>bool</td>
+<td>Publish intermediate files. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>resource_allocation_profile_tag</code></td>
+<td>string</td>
+<td>Resource profile in <code>config/resources.json</code>. Defaults to <code>default</code>.</td>
+</tr>
+<tr>
+<td><code>base_resource_update</code></td>
+<td>namespace</td>
+<td>Optional per-process CPU and memory adjustments using the shared resource handler.</td>
+</tr>
+<tr>
+<td><code>work_dir</code></td>
+<td>string(path)</td>
+<td>Optional Nextflow work directory.</td>
+</tr>
+</tbody>
+</table>
+<p>Additional OpenMS and MSPtools options and their pipeline parameter names are listed in <a href="../params.rst">docs/params.rst</a>. The default OpenMS image uses 3.6.0; the pyOpenMS image remains at 3.5.0. The default MSPtools image is 1.1.1, which supports merged scan and linked maps and a configurable virtual-reference channel threshold.</p>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../feature-based-tmt-workflow/" class="btn btn-neutral float-left" title="Feature-based TMT workflow"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../outputs/" class="btn btn-neutral float-right" title="Outputs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/tree/v2.1.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../feature-based-tmt-workflow/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../outputs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
