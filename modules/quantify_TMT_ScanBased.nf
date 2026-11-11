@@ -14,7 +14,6 @@ include { quantify_peptides } from './quantify_peptides'
 include { normalize_consensusXML_MAD } from './normalize_consensusXML_MAD'
 include { filter_consensusXML_naFeatures } from './filter_consensusXML_naFeatures'
 include { fix_ProteinQuantCSV_unquantified } from './fix_ProteinQuantCSV_unquantified'
-include { repair_ProteinQuantCSV_columns } from './repair_ProteinQuantCSV_columns'
 
 /**
  * Input: validated plex tuples. Output: one dataset consensusXML and peptide CSV after
@@ -79,13 +78,9 @@ workflow quantify_TMT_ScanBased {
         }
         resolve_conflict(consensus_for_quantification)
         quantify_peptides(resolve_conflict.out[0])
-        if (params.ProteinQuantifier.best_charge_and_fraction) {
-            // OpenMS 3.5 can omit fields for plexes where a peptide is absent.
-            repair_ProteinQuantCSV_columns(quantify_peptides.out[0], resolve_conflict.out[0])
-            peptide_for_cleanup = repair_ProteinQuantCSV_columns.out[0]
-        } else {
-            peptide_for_cleanup = quantify_peptides.out[0]
-        }
+        // OpenMS 3.6 writes every file/channel field in detailed peptide rows,
+        // including zeros for a plex where the peptide was not observed.
+        peptide_for_cleanup = quantify_peptides.out[0]
         // MAD log2 ratios use zero for equality to the reference, so zero-plex
         // cleanup applies only to intensity-scale outputs.
         if (params.enable_tmt_normalization && (params.tmt_normalization_method == 'openms' || params.MADNormalizer.quasi_intensity)) {

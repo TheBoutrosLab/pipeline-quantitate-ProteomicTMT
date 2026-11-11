@@ -11,7 +11,8 @@ process quantify_peptides {
     publishDir "${params.final_output_dir}",
         mode: 'copy',
         pattern: "*.csv",
-        enabled: (!params.enable_tmt_normalization || (params.tmt_normalization_method == 'mad' && !params.MADNormalizer.quasi_intensity)) && !params.ProteinQuantifier.best_charge_and_fraction
+        enabled: !params.enable_tmt_normalization ||
+            (params.tmt_normalization_method == 'mad' && !params.MADNormalizer.quasi_intensity)
 
     publishDir "${params.intermediate_file_dir}/${params.dataset_id}/${task.process.replace(':','/')}",
         enabled: params.save_intermediate_files,
@@ -33,8 +34,8 @@ process quantify_peptides {
     script:
     peptide_out = "${params.dataset_id}_ProteinQuantifier_peptide.csv"
     def program_options = params.ProteinQuantifier ?: [:]
-    def flag_options = ['best_charge_and_fraction', 'top:include_all',
-        'consensus:normalize', 'consensus:fix_peptides', 'ratios', 'ratiosSILAC'] as Set
+    def flag_options = ['best_charge', 'top:include_all',
+        'consensus:normalize', 'consensus:fix_peptides'] as Set
     def extra_args = getToolArgs(program_options, flag_options)
     """
     ProteinQuantifier \\

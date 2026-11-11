@@ -13,7 +13,7 @@ reporter-type options should not be placed in these namespaces.
 
 The full option list and version-specific defaults are available from each
 configured tool's ``-helphelp`` (OpenMS) or ``--help`` (MSPtools). In OpenMS
-3.5, a boolean parameter whose default is ``true`` takes an explicit value;
+3.6, a boolean parameter whose default is ``true`` takes an explicit value;
 for example, ``IsobaricAnalyzer.extraction.purity_interpolation = false``
 passes ``-extraction:purity_interpolation 'false'``. False-by-default boolean
 parameters registered as flags use the presence-only form below.
@@ -45,8 +45,8 @@ parameters registered as flags use the presence-only form below.
        ``consensus.annotate_ids_with_subelements``
    * - ``ProteinQuantifier``
      - ``ProteinQuantifier``
-     - ``best_charge_and_fraction``, ``top.include_all``,
-       ``consensus.normalize``, ``consensus.fix_peptides``, ``ratios``, ``ratiosSILAC``
+     - ``best_charge``, ``top.include_all``,
+       ``consensus.normalize``, ``consensus.fix_peptides``
    * - ``IDConflictResolver``
      - ``IDConflictResolver``
      - None
@@ -77,7 +77,8 @@ levels. For example, ``FeatureLinkerUnlabeledQT.algorithm.distance_MZ.max_differ
 becomes ``-algorithm:distance_MZ:max_difference``.
 
 The pipeline sets defaults for ``IDMapper.consensus`` flags,
-``ProteinQuantifier.best_charge_and_fraction``, selected ``MADNormalizer``
+``ProteinQuantifier.best_charge`` and ``ProteinQuantifier.fractions.aggregate``,
+selected ``MADNormalizer``
 options, and the feature linker's identification, RT, and m/z settings in
 ``config/default.config``. Set other options in a run config only when needed.
 For example, the following are optional values supported directly by OpenMS::
@@ -121,7 +122,7 @@ Frequently adjusted valued options
    * - ``MapAlignerIdentification.model.type``
      - ``-model:type``
    * - ``FeatureLinkerUnlabeledQT.algorithm.use_identifications``
-     - ``-algorithm:use_identifications`` (presence-only flag in OpenMS 3.5)
+     - ``-algorithm:use_identifications`` (presence-only flag in OpenMS 3.6)
    * - ``FeatureLinkerUnlabeledQT.algorithm.distance_RT.max_difference``
      - ``-algorithm:distance_RT:max_difference`` (seconds)
    * - ``FeatureLinkerUnlabeledQT.algorithm.distance_MZ.max_difference``
