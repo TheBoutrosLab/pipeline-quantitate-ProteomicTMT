@@ -1,6 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [Unreleased] - 2026-11-11
+
+### Changed
+
+- Upgrade OpenMS tool commands to 3.6.0 and replace ProteinQuantifier's removed `best_charge_and_fraction` flag with `best_charge`, retaining detailed peptide output.
+- Keep assay-level fraction aggregation at `sum` and remove the OpenMS 3.5 peptide-column repair step now that OpenMS 3.6 writes full-width detailed rows.
+- Remove the ratio flags deleted from ProteinQuantifier 3.6 and update the peptide cleanup, tests, and documentation.
 
 ## [2.0.0] - 2026-11-08
 

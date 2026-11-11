@@ -31,9 +31,9 @@ process fix_ProteinQuantCSV_unquantified {
     def program_options = params.fixZeroPlex ?: [:]
     def flag_options = ['greedy_group_resolution', 'nocheck_intensity'] as Set
     def extra_args = getToolArgs(program_options, flag_options, '--')
-    // Charge-aggregated peptide rows use charge 0; the consensusXML lookup
-    // expects the individual charge reported with -best_charge_and_fraction.
-    consensus_arg = params.ProteinQuantifier.best_charge_and_fraction ? "--consensusXML ${consensusXML}" : ""
+    // Charge-aggregated peptide rows use charge 0; consensusXML matching
+    // requires the individual charge reported with -best_charge.
+    consensus_arg = params.ProteinQuantifier.best_charge ? "--consensusXML ${consensusXML}" : ""
     """
     msptools ProteinQuantCSV fixZeroPlex \\
         --input-path ${input_csv} \\
