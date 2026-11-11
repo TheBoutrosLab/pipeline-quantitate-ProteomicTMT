@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 1407 1547" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:affinity="https://www.affinity.studio/" style="fill-rule:evenodd;clip-rule:evenodd;">
+<svg width="100%" height="100%" viewBox="0 0 1407 1459" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:affinity="https://www.affinity.studio/" style="fill-rule:evenodd;clip-rule:evenodd;">
     <g id="Artboard1" transform="matrix(1,0,0,1,-45,-87)">
-        <rect x="45" y="87" width="1407" height="1547" style="fill:none;"/>
+        <rect x="45" y="87" width="1407" height="1459" style="fill:none;"/>
         <g transform="matrix(0.938,0,0,0.931928,45,87)">
-            <rect x="0" y="0" width="1500" height="1660" style="fill:white;"/>
+            <rect x="0" y="0" width="1500" height="1566" style="fill:white;"/>
         </g>
         <path d="M1282,105C1291.934,105 1300,113.066 1300,123L1300,169C1300,178.934 1291.934,187 1282,187L218,187C208.066,187 200,178.934 200,169L200,123C200,113.066 208.066,105 218,105L1282,105Z" style="fill:rgb(239,244,248);stroke:rgb(155,177,194);stroke-width:2px;"/>
         <g transform="matrix(1,0,0,1,749,151)">
@@ -207,17 +207,7 @@
             </g>
             <text x="-48.775px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">ProteinQuantiﬁer</text>
         </g>
-        <path d="M974,1284C980.071,1284 985,1288.929 985,1295L985,1337C985,1343.071 980.071,1348 974,1348L526,1348C519.929,1348 515,1343.071 515,1337L515,1295C515,1288.929 519.929,1284 526,1284L974,1284Z" style="fill:rgb(248,245,255);stroke:rgb(168,151,203);stroke-width:2px;"/>
-        <g transform="matrix(1,0,0,1,750,1311)">
-            <g transform="matrix(17,0,0,17,62.355469,0)">
-            </g>
-            <g transform="matrix(17,0,0,17,67.078613,0)">
-            </g>
-            <text x="-102.042px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Restore omitted CSV ﬁelds</text>
-        </g>
-        <g transform="matrix(1,0,0,1,750,1331)">
-            <text x="-96.462px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">RepairProteinQuantCSVColumns</text>
-        </g>
+        <g transform="translate(0,-88)">
         <path d="M974,1372C980.071,1372 985,1376.929 985,1383L985,1425C985,1431.071 980.071,1436 974,1436L526,1436C519.929,1436 515,1431.071 515,1425L515,1383C515,1376.929 519.929,1372 526,1372L974,1372Z" style="fill:rgb(255,245,235);stroke:rgb(212,146,94);stroke-width:2px;stroke-dasharray:7,5;"/>
         <g transform="matrix(1,0,0,1,750,1399)">
             <text x="-132.746px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Mark missing plex values (optional)</text>
@@ -229,10 +219,11 @@
             </g>
             <text x="-62.131px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">MSPtools ﬁxZeroPlex</text>
         </g>
+        </g>
         <path d="M750,1084L750,1108" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
         <path d="M750,1172L750,1196" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
         <path d="M750,1260L750,1284" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
-        <path d="M750,1348L750,1372" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <g transform="translate(0,-88)">
         <path d="M538,1510C544.071,1510 549,1514.929 549,1521L549,1599C549,1605.071 544.071,1610 538,1610L175,1610C168.929,1610 164,1605.071 164,1599L164,1521C164,1514.929 168.929,1510 175,1510L538,1510Z" style="fill:rgb(255,248,232);stroke:rgb(210,169,86);stroke-width:2px;"/>
         <g transform="matrix(1,0,0,1,356.5,1539)">
             <text x="-95.911px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Resolved consensusXML</text>
@@ -269,8 +260,9 @@
         <g transform="matrix(1,0,0,1,1156,1591)">
             <text x="-56.005px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">Feature-based only</text>
         </g>
-        <path d="M515,1140L356,1140L356,1510" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
         <path d="M750,1436L750,1510" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
-        <path d="M1336,879L1418,879L1418,1482L1156,1482L1156,1510" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;stroke-dasharray:6,5;"/>
+        </g>
+        <path d="M515,1140L356,1140L356,1422" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1336,879L1418,879L1418,1394L1156,1394L1156,1422" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;stroke-dasharray:6,5;"/>
     </g>
 </svg>

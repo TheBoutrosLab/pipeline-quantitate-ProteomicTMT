@@ -100,7 +100,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/cad5885ee163a140c603e31feb1e592eaa1c3d0b/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -151,21 +151,21 @@ plex_01,/data/plex_01_fraction_2.mzML
 plex_01,F1,/data/plex_01_fraction_1.mzML
 plex_02,F1,/data/plex_02_fraction_1.mzML
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/mzML.csv">input/mzML.csv</a> as a template. Paths must be accessible to Nextflow and the configured containers.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/cad5885ee163a140c603e31feb1e592eaa1c3d0b/input/mzML.csv">input/mzML.csv</a> as a template. Paths must be accessible to Nextflow and the configured containers.</p>
 <h3 id="consensusxml-csv">consensusXML CSV</h3>
 <p>With <code>consensusXML_entrypoint = true</code>, use <code>consensusXML_csv</code>. It has exactly one <code>consensusXML</code> path per <code>plex_id</code> and requires no channel CSV; channel descriptions must already be in the consensusXML headers.</p>
 <pre><code class="language-csv">plex_id,consensusXML
 plex_01,/data/plex_01.consensusXML
 plex_02,/data/plex_02.consensusXML
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/consensusXML.csv">input/consensusXML.csv</a> as a template.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/cad5885ee163a140c603e31feb1e592eaa1c3d0b/input/consensusXML.csv">input/consensusXML.csv</a> as a template.</p>
 <h3 id="idxml-csv">idXML CSV</h3>
 <p>The idXML CSV has exactly one row per plex. Its <code>plex_id</code> values must match the chosen source CSV exactly, including for a multi-fraction plex.</p>
 <pre><code class="language-csv">plex_id,idXML
 plex_01,/data/plex_01.idXML
 plex_02,/data/plex_02.idXML
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/idXML.csv">input/idXML.csv</a> as a template.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/cad5885ee163a140c603e31feb1e592eaa1c3d0b/input/idXML.csv">input/idXML.csv</a> as a template.</p>
 <h3 id="channel-csv">Channel CSV</h3>
 <p>For mzML input, provide one <code>channel_csv</code> containing every plex's reporter channels. Its <code>plex_id</code> values must match the mzML CSV exactly. The pipeline groups these rows by plex ID and passes only that plex's channels to IsobaricAnalyzer. Reporter labels must match the run's <code>plex_type</code>. Sample names belong in the <code>description</code> column. Label one channel per plex <code>reference</code> when using OpenMS normalization or MAD normalization with a physical reference; its reporter label is passed to IsobaricAnalyzer. MAD normalization with a virtual reference does not require this label.</p>
 <table>
@@ -200,7 +200,7 @@ plex_01,127N,sample_01
 plex_02,126,reference
 plex_02,127N,sample_02
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/86e1ad6c32cbcbbb209f1f1c36a614e8ac4db074/input/channel.csv">input/channel.csv</a> as a channel CSV template.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/cad5885ee163a140c603e31feb1e592eaa1c3d0b/input/channel.csv">input/channel.csv</a> as a channel CSV template.</p>
 <p>A premerged consensusXML must already contain channel descriptions in its column headers.</p>
 <h3 id="config">Config</h3>
 <table>
@@ -298,9 +298,14 @@ plex_02,127N,sample_02
 <td>Remove NaN reporter handles after MAD normalization. Defaults to <code>false</code> to preserve CSV columns.</td>
 </tr>
 <tr>
-<td><code>ProteinQuantifier.best_charge_and_fraction</code></td>
+<td><code>ProteinQuantifier.best_charge</code></td>
 <td>bool</td>
-<td>Report peptide abundances by charge and fraction. Defaults to <code>true</code>.</td>
+<td>Report detailed peptide abundances by charge and fraction. Defaults to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>ProteinQuantifier.fractions.aggregate</code></td>
+<td>string</td>
+<td>Combine fractions for assay-level abundances; defaults to <code>sum</code>. Detailed peptide rows remain separate.</td>
 </tr>
 <tr>
 <td><code>tmt_workflow</code></td>
@@ -334,7 +339,7 @@ plex_02,127N,sample_02
 </tr>
 </tbody>
 </table>
-<p>Additional OpenMS and MSPtools options and their pipeline parameter names are listed in <a href="../params.rst">docs/params.rst</a>. The default OpenMS and pyOpenMS images use 3.5.0. The default MSPtools image is 1.1.1, which supports merged scan and linked maps and a configurable virtual-reference channel threshold.</p>
+<p>Additional OpenMS and MSPtools options and their pipeline parameter names are listed in <a href="../params.rst">docs/params.rst</a>. The default OpenMS image uses 3.6.0; the pyOpenMS image remains at 3.5.0. The default MSPtools image is 1.1.1, which supports merged scan and linked maps and a configurable virtual-reference channel threshold.</p>
 <hr />
               
             </div>
