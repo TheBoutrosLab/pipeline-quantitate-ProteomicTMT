@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1407 1459" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:affinity="https://www.affinity.studio/" style="fill-rule:evenodd;clip-rule:evenodd;">
+    <g id="Artboard1" transform="matrix(1,0,0,1,-45,-87)">
+        <rect x="45" y="87" width="1407" height="1459" style="fill:none;"/>
+        <g transform="matrix(0.938,0,0,0.931928,45,87)">
+            <rect x="0" y="0" width="1500" height="1566" style="fill:white;"/>
+        </g>
+        <path d="M1282,105C1291.934,105 1300,113.066 1300,123L1300,169C1300,178.934 1291.934,187 1282,187L218,187C208.066,187 200,178.934 200,169L200,123C200,113.066 208.066,105 218,105L1282,105Z" style="fill:rgb(239,244,248);stroke:rgb(155,177,194);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,749,151)">
+            <text x="-183.396px" y="0px" style="font-family:'Helvetica';font-size:22px;fill:rgb(23,48,68);">mzML.csv + idXML.csv + channel.csv</text>
+        </g>
+        <path d="M687,245C699.694,245 710,255.306 710,268L710,935C710,947.694 699.694,958 687,958L93,958C80.306,958 70,947.694 70,935L70,268C70,255.306 80.306,245 93,245L687,245Z" style="fill:rgb(237,244,253);stroke:rgb(127,164,210);stroke-width:2px;"/>
+        <path d="M1407,245C1419.694,245 1430,255.306 1430,268L1430,935C1430,947.694 1419.694,958 1407,958L813,958C800.306,958 790,947.694 790,935L790,268C790,255.306 800.306,245 813,245L1407,245Z" style="fill:rgb(235,247,242);stroke:rgb(119,180,156);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,191,272)">
+            <g transform="matrix(21,0,0,21,65.368652,0)">
+            </g>
+            <g transform="matrix(21,0,0,21,72.361816,0)">
+            </g>
+            <text x="-107.358px" y="0px" style="font-family:'Helvetica-Bold', 'Helvetica';font-weight:700;font-size:21px;fill:rgb(23,48,68);">Scan-based workﬂow</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1296,272)">
+            <g transform="matrix(21,0,0,21,78.201416,0)">
+            </g>
+            <g transform="matrix(21,0,0,21,85.19458,0)">
+            </g>
+            <text x="-120.191px" y="0px" style="font-family:'Helvetica-Bold', 'Helvetica';font-weight:700;font-size:21px;fill:rgb(23,48,68);">Feature-based workﬂow</text>
+        </g>
+        <path d="M750,187L750,219" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M390,219L1110,219" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M390,219L390,300" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1110,219L1110,282" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M952,282L1248,282" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M952,282L952,300" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1248,282L1248,300" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M599,300C605.071,300 610,304.929 610,311L610,353C610,359.071 605.071,364 599,364L181,364C174.929,364 170,359.071 170,353L170,311C170,304.929 174.929,300 181,300L599,300Z" style="fill:white;stroke:rgb(115,152,199);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,390,327)">
+            <text x="-71.013px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Sort mzML<tspan x="10.542px 15.265px " y="0px 0px "> s</tspan>pectra</text>
+        </g>
+        <g transform="matrix(1,0,0,1,390,347)">
+            <text x="-24.918px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">FileFilter</text>
+        </g>
+        <path d="M599,386C605.071,386 610,390.929 610,397L610,439C610,445.071 605.071,450 599,450L181,450C174.929,450 170,445.071 170,439L170,397C170,390.929 174.929,386 181,386L599,386Z" style="fill:white;stroke:rgb(115,152,199);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,390,413)">
+            <text x="-76.529px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Extract reporter ions</text>
+        </g>
+        <g transform="matrix(1,0,0,1,390,433)">
+            <text x="-48.049px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">IsobaricAnalyzer</text>
+        </g>
+        <path d="M599,472C605.071,472 610,476.929 610,483L610,525C610,531.071 605.071,536 599,536L181,536C174.929,536 170,531.071 170,525L170,483C170,476.929 174.929,472 181,472L599,472Z" style="fill:white;stroke:rgb(115,152,199);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,390,499)">
+            <text x="-105.831px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Merge runs within each plex</text>
+        </g>
+        <g transform="matrix(1,0,0,1,390,519)">
+            <text x="-31.062px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">FileMerger</text>
+        </g>
+        <path d="M599,558C605.071,558 610,562.929 610,569L610,611C610,617.071 605.071,622 599,622L181,622C174.929,622 170,617.071 170,611L170,569C170,562.929 174.929,558 181,558L599,558Z" style="fill:white;stroke:rgb(115,152,199);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,390,585)">
+            <text x="-128.035px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Map peptide IDs to reporter scans</text>
+        </g>
+        <g transform="matrix(1,0,0,1,390,605)">
+            <text x="-28.539px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">IDMapper</text>
+        </g>
+        <path d="M599,644C605.071,644 610,648.929 610,655L610,697C610,703.071 605.071,708 599,708L181,708C174.929,708 170,703.071 170,697L170,655C170,648.929 174.929,644 181,644L599,644Z" style="fill:white;stroke:rgb(115,152,199);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,390,671)">
+            <text x="-96.376px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Merge plexes as columns</text>
+        </g>
+        <g transform="matrix(1,0,0,1,390,691)">
+            <text x="-31.062px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">FileMerger</text>
+        </g>
+        <path d="M390,364L390,386" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M390,450L390,472" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M390,536L390,558" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M390,622L390,644" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M639,735C645.071,735 650,739.929 650,746L650,799C650,805.071 645.071,810 639,810L141,810C134.929,810 130,805.071 130,799L130,746C130,739.929 134.929,735 141,735L639,735Z" style="fill:rgb(255,248,232);stroke:rgb(210,169,86);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,390,764)">
+            <text x="-110.085px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Dataset scan consensusXML</text>
+        </g>
+        <g transform="matrix(1,0,0,1,390,788)">
+            <text x="-121.059px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">${dataset_id}_ScanBased.consensusXML</text>
+        </g>
+        <path d="M390,708L390,735" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1078,300C1084.071,300 1089,304.929 1089,311L1089,353C1089,359.071 1084.071,364 1078,364L826,364C819.929,364 815,359.071 815,353L815,311C815,304.929 819.929,300 826,300L1078,300Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,952,327)">
+            <text x="-68.486px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Split IDs by mzML</text>
+        </g>
+        <g transform="matrix(1,0,0,1,952,347)">
+            <text x="-64.295px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">SplitTMTIdXMLByRun</text>
+        </g>
+        <path d="M1078,386C1084.071,386 1089,390.929 1089,397L1089,439C1089,445.071 1084.071,450 1078,450L826,450C819.929,450 815,445.071 815,439L815,397C815,390.929 819.929,386 826,386L1078,386Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,952,413)">
+            <text x="-77.479px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Detect MS1 features</text>
+        </g>
+        <g transform="matrix(1,0,0,1,952,433)">
+            <g transform="matrix(13,0,0,13,36.130859,0)">
+            </g>
+            <g transform="matrix(13,0,0,13,39.742676,0)">
+            </g>
+            <text x="-77.321px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">FeatureFinderIdentiﬁcation</text>
+        </g>
+        <path d="M1078,472C1084.071,472 1089,476.929 1089,483L1089,525C1089,531.071 1084.071,536 1078,536L826,536C819.929,536 815,531.071 815,525L815,483C815,476.929 819.929,472 826,472L1078,472Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,952,499)">
+            <text x="-90.238px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Align matching fractions</text>
+        </g>
+        <g transform="matrix(1,0,0,1,952,519)">
+            <g transform="matrix(13,0,0,13,28.183594,0)">
+            </g>
+            <g transform="matrix(13,0,0,13,31.79541,0)">
+            </g>
+            <text x="-69.374px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">MapAlignerIdentiﬁcation</text>
+        </g>
+        <path d="M1374,300C1380.071,300 1385,304.929 1385,311L1385,353C1385,359.071 1380.071,364 1374,364L1122,364C1115.929,364 1111,359.071 1111,353L1111,311C1111,304.929 1115.929,300 1122,300L1374,300Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1248,327)">
+            <text x="-71.013px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Sort mzML<tspan x="10.542px 15.265px " y="0px 0px "> s</tspan>pectra</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1248,347)">
+            <text x="-24.918px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">FileFilter</text>
+        </g>
+        <path d="M1374,386C1380.071,386 1385,390.929 1385,397L1385,439C1385,445.071 1380.071,450 1374,450L1122,450C1115.929,450 1111,445.071 1111,439L1111,397C1111,390.929 1115.929,386 1122,386L1374,386Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1248,413)">
+            <text x="-76.529px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Extract reporter ions</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1248,433)">
+            <text x="-48.049px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">IsobaricAnalyzer</text>
+        </g>
+        <path d="M1374,472C1380.071,472 1385,476.929 1385,483L1385,525C1385,531.071 1380.071,536 1374,536L1122,536C1115.929,536 1111,531.071 1111,525L1111,483C1111,476.929 1115.929,472 1122,472L1374,472Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1248,499)">
+            <text x="-61.895px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Map peptide IDs</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1248,519)">
+            <text x="-28.539px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">IDMapper</text>
+        </g>
+        <path d="M952,364L952,386" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M952,450L952,472" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1248,364L1248,386" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1248,450L1248,472" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1325,582C1331.071,582 1336,586.929 1336,593L1336,635C1336,641.071 1331.071,646 1325,646L895,646C888.929,646 884,641.071 884,635L884,593C884,586.929 888.929,582 895,582L1325,582Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1110,609)">
+            <text x="-105.528px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Allocate <tspan x="-40.624px -30.24px -16.079px -5.993px -1.27px " y="0px 0px 0px 0px 0px ">TMT c</tspan>hannel areas</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1110,629)">
+            <text x="-101.159px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">BuildFeatureBasedTMTConsensus</text>
+        </g>
+        <path d="M952,536L952,559L1110,559L1110,582" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1248,536L1248,559L1110,559" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1325,668C1331.071,668 1336,672.929 1336,679L1336,721C1336,727.071 1331.071,732 1325,732L895,732C888.929,732 884,727.071 884,721L884,679C884,672.929 888.929,668 895,668L1325,668Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1110,695)">
+            <text x="-102.996px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Link features across plexes</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1110,715)">
+            <text x="-78.403px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">FeatureLinkerUnlabeledQT</text>
+        </g>
+        <path d="M1325,754C1331.071,754 1336,758.929 1336,765L1336,807C1336,813.071 1331.071,818 1325,818L895,818C888.929,818 884,813.071 884,807L884,765C884,758.929 888.929,754 895,754L1325,754Z" style="fill:white;stroke:rgb(112,170,144);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1110,781)">
+            <text x="-117.178px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Annotate linked measurements</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1110,801)">
+            <text x="-70.691px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">ExportLinkedTMTV<tspan x="39.613px 46.843px " y="0px 0px ">al</tspan>ues</text>
+        </g>
+        <path d="M1110,646L1110,668" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1110,732L1110,754" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1325,840C1331.071,840 1336,844.929 1336,851L1336,905C1336,911.071 1331.071,916 1325,916L895,916C888.929,916 884,911.071 884,905L884,851C884,844.929 888.929,840 895,840L1325,840Z" style="fill:rgb(255,248,232);stroke:rgb(210,169,86);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1110,869)">
+            <text x="-118.593px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Dataset feature consensusXML</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1110,893)">
+            <text x="-128.645px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">${dataset_id}_FeatureBased.consensusXML</text>
+        </g>
+        <path d="M1110,818L1110,840" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M390,810L390,1000L750,1000" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1110,916L1110,1000L750,1000" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M750,1000L750,1020" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M974,1020C980.071,1020 985,1024.929 985,1031L985,1073C985,1079.071 980.071,1084 974,1084L526,1084C519.929,1084 515,1079.071 515,1073L515,1031C515,1024.929 519.929,1020 526,1020L974,1020Z" style="fill:rgb(255,245,235);stroke:rgb(212,146,94);stroke-width:2px;stroke-dasharray:7,5;"/>
+        <g transform="matrix(1,0,0,1,750,1047)">
+            <text x="-126.135px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Normalize merged map (optional)</text>
+        </g>
+        <g transform="matrix(1,0,0,1,750,1067)">
+            <text x="-75.486px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">MSPtools MADNormalizer</text>
+        </g>
+        <path d="M974,1108C980.071,1108 985,1112.929 985,1119L985,1161C985,1167.071 980.071,1172 974,1172L526,1172C519.929,1172 515,1167.071 515,1161L515,1119C515,1112.929 519.929,1108 526,1108L974,1108Z" style="fill:rgb(248,245,255);stroke:rgb(168,151,203);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,750,1135)">
+            <g transform="matrix(17,0,0,17,-31.181885,0)">
+            </g>
+            <g transform="matrix(17,0,0,17,-26.45874,0)">
+            </g>
+            <g transform="matrix(17,0,0,17,62.36792,0)">
+            </g>
+            <g transform="matrix(17,0,0,17,67.091064,0)">
+            </g>
+            <text x="-124.732px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Resolve conﬂicting identiﬁcations</text>
+        </g>
+        <g transform="matrix(1,0,0,1,750,1155)">
+            <g transform="matrix(13,0,0,13,-16.973633,0)">
+            </g>
+            <g transform="matrix(13,0,0,13,-13.361816,0)">
+            </g>
+            <text x="-53.822px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">IDConﬂictResolver</text>
+        </g>
+        <path d="M974,1196C980.071,1196 985,1200.929 985,1207L985,1249C985,1255.071 980.071,1260 974,1260L526,1260C519.929,1260 515,1255.071 515,1249L515,1207C515,1200.929 519.929,1196 526,1196L974,1196Z" style="fill:rgb(248,245,255);stroke:rgb(168,151,203);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,750,1223)">
+            <text x="-66.153px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Quantify peptides</text>
+        </g>
+        <g transform="matrix(1,0,0,1,750,1243)">
+            <g transform="matrix(13,0,0,13,30.716309,0)">
+            </g>
+            <g transform="matrix(13,0,0,13,34.328125,0)">
+            </g>
+            <text x="-48.775px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">ProteinQuantiﬁer</text>
+        </g>
+        <g transform="translate(0,-88)">
+        <path d="M974,1372C980.071,1372 985,1376.929 985,1383L985,1425C985,1431.071 980.071,1436 974,1436L526,1436C519.929,1436 515,1431.071 515,1425L515,1383C515,1376.929 519.929,1372 526,1372L974,1372Z" style="fill:rgb(255,245,235);stroke:rgb(212,146,94);stroke-width:2px;stroke-dasharray:7,5;"/>
+        <g transform="matrix(1,0,0,1,750,1399)">
+            <text x="-132.746px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Mark missing plex values (optional)</text>
+        </g>
+        <g transform="matrix(1,0,0,1,750,1419)">
+            <g transform="matrix(13,0,0,13,-2.888184,0)">
+            </g>
+            <g transform="matrix(13,0,0,13,0.723633,0)">
+            </g>
+            <text x="-62.131px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">MSPtools ﬁxZeroPlex</text>
+        </g>
+        </g>
+        <path d="M750,1084L750,1108" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M750,1172L750,1196" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M750,1260L750,1284" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <g transform="translate(0,-88)">
+        <path d="M538,1510C544.071,1510 549,1514.929 549,1521L549,1599C549,1605.071 544.071,1610 538,1610L175,1610C168.929,1610 164,1605.071 164,1599L164,1521C164,1514.929 168.929,1510 175,1510L538,1510Z" style="fill:rgb(255,248,232);stroke:rgb(210,169,86);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,356.5,1539)">
+            <text x="-95.911px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Resolved consensusXML</text>
+        </g>
+        <g transform="matrix(1,0,0,1,356.5,1563)">
+            <g transform="matrix(13,0,0,13,-21.296387,0)">
+            </g>
+            <g transform="matrix(13,0,0,13,-17.68457,0)">
+            </g>
+            <text x="-141.28px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">${dataset_id}_IDConﬂictResolver<tspan x="48.788px 52.4px " y="0px 0px ">.c</tspan>onsensusXML</text>
+        </g>
+        <path d="M944,1510C950.071,1510 955,1514.929 955,1521L955,1599C955,1605.071 950.071,1610 944,1610L581,1610C574.929,1610 570,1605.071 570,1599L570,1521C570,1514.929 574.929,1510 581,1510L944,1510Z" style="fill:rgb(255,248,232);stroke:rgb(210,169,86);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,762.5,1539)">
+            <g transform="matrix(17,0,0,17,7.578613,0)">
+            </g>
+            <g transform="matrix(17,0,0,17,12.301758,0)">
+            </g>
+            <text x="-101.12px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Peptide quantiﬁcation CSV</text>
+        </g>
+        <g transform="matrix(1,0,0,1,762.5,1563)">
+            <g transform="matrix(13,0,0,13,33.258545,0)">
+            </g>
+            <g transform="matrix(13,0,0,13,36.870361,0)">
+            </g>
+            <text x="-129.368px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">${dataset_id}_ProteinQuantiﬁer_peptide*.csv</text>
+        </g>
+        <path d="M1325,1510C1331.071,1510 1336,1514.929 1336,1521L1336,1599C1336,1605.071 1331.071,1610 1325,1610L987,1610C980.929,1610 976,1605.071 976,1599L976,1521C976,1514.929 980.929,1510 987,1510L1325,1510Z" style="fill:rgb(255,248,232);stroke:rgb(210,169,86);stroke-width:2px;"/>
+        <g transform="matrix(1,0,0,1,1156,1539)">
+            <text x="-74.666px" y="0px" style="font-family:'Helvetica';font-size:17px;fill:rgb(23,48,68);">Linked feature table</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1156,1563)">
+            <text x="-96.484px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">${dataset_id}_LinkedFeatures.tsv</text>
+        </g>
+        <g transform="matrix(1,0,0,1,1156,1591)">
+            <text x="-56.005px" y="0px" style="font-family:'Helvetica';font-size:13px;fill:rgb(82,104,121);">Feature-based only</text>
+        </g>
+        <path d="M750,1436L750,1510" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        </g>
+        <path d="M515,1140L356,1140L356,1422" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;"/>
+        <path d="M1336,879L1418,879L1418,1394L1156,1394L1156,1422" style="fill:none;fill-rule:nonzero;stroke:rgb(75,97,114);stroke-width:2.5px;stroke-dasharray:6,5;"/>
+    </g>
+</svg>
