@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-11-20
+
 ### Changed
 
 - Migrate the pipeline license from GPL to BSD 3-Clause and update license documentation; shared code and third-party tools retain their respective licenses.
@@ -75,4 +77,5 @@
 [1.1.0]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v1.0.0...v1.1.0
 [2.0.0]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v1.1.0...v2.0.0
 [2.1.0]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v2.0.0...v2.1.0
-[unreleased]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v2.1.0...HEAD
+[2.1.1]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v2.1.0...v2.1.1
+[unreleased]: https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/compare/v2.1.1...HEAD
