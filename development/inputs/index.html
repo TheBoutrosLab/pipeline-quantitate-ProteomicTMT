@@ -100,7 +100,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/4b6e170a2da9b751693328898429245238ed40d5/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/38a31cac222442ed8540bfa100c7f55364d051db/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -151,21 +151,21 @@ plex_01,/data/plex_01_fraction_2.mzML
 plex_01,F1,/data/plex_01_fraction_1.mzML
 plex_02,F1,/data/plex_02_fraction_1.mzML
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/4b6e170a2da9b751693328898429245238ed40d5/input/mzML.csv">input/mzML.csv</a> as a template. Paths must be accessible to Nextflow and the configured containers.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/38a31cac222442ed8540bfa100c7f55364d051db/input/mzML.csv">input/mzML.csv</a> as a template. Paths must be accessible to Nextflow and the configured containers.</p>
 <h3 id="consensusxml-csv">consensusXML CSV</h3>
 <p>With <code>consensusXML_entrypoint = true</code>, use <code>consensusXML_csv</code>. It has exactly one <code>consensusXML</code> path per <code>plex_id</code> and requires no channel CSV; channel descriptions must already be in the consensusXML headers.</p>
 <pre><code class="language-csv">plex_id,consensusXML
 plex_01,/data/plex_01.consensusXML
 plex_02,/data/plex_02.consensusXML
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/4b6e170a2da9b751693328898429245238ed40d5/input/consensusXML.csv">input/consensusXML.csv</a> as a template.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/38a31cac222442ed8540bfa100c7f55364d051db/input/consensusXML.csv">input/consensusXML.csv</a> as a template.</p>
 <h3 id="idxml-csv">idXML CSV</h3>
 <p>The idXML CSV has exactly one row per plex. Its <code>plex_id</code> values must match the chosen source CSV exactly, including for a multi-fraction plex.</p>
 <pre><code class="language-csv">plex_id,idXML
 plex_01,/data/plex_01.idXML
 plex_02,/data/plex_02.idXML
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/4b6e170a2da9b751693328898429245238ed40d5/input/idXML.csv">input/idXML.csv</a> as a template.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/38a31cac222442ed8540bfa100c7f55364d051db/input/idXML.csv">input/idXML.csv</a> as a template.</p>
 <h3 id="channel-csv">Channel CSV</h3>
 <p>For mzML input, provide one <code>channel_csv</code> containing every plex's reporter channels. Its <code>plex_id</code> values must match the mzML CSV exactly. The pipeline groups these rows by plex ID and passes only that plex's channels to IsobaricAnalyzer. Reporter labels must match the run's <code>plex_type</code>. Sample names belong in the <code>description</code> column. Label one channel per plex <code>reference</code> when using OpenMS normalization or MAD normalization with a physical reference; its reporter label is passed to IsobaricAnalyzer. MAD normalization with a virtual reference does not require this label.</p>
 <table>
@@ -200,7 +200,7 @@ plex_01,127N,sample_01
 plex_02,126,reference
 plex_02,127N,sample_02
 </code></pre>
-<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/4b6e170a2da9b751693328898429245238ed40d5/input/channel.csv">input/channel.csv</a> as a channel CSV template.</p>
+<p>Use <a href="https://github.com/TheBoutrosLab/pipeline-quantitate-ProteomicTMT/blob/38a31cac222442ed8540bfa100c7f55364d051db/input/channel.csv">input/channel.csv</a> as a channel CSV template.</p>
 <p>A premerged consensusXML must already contain channel descriptions in its column headers.</p>
 <h3 id="config">Config</h3>
 <table>
